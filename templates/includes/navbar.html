@@ -1,0 +1,100 @@
+<!-- navbar.html -->
+{% load static %} <!-- optional if you need static files -->
+<nav class="navbar navbar-expand-lg fixed-top bg-white shadow-sm" style="border-bottom: 3px solid #D4AF37;">
+    <div class="container">
+        <!-- Brand / Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <div class="me-2 d-flex align-items-center justify-content-center" style="background-color: #0A2F1F; width: 42px; height: 42px; border-radius: 12px;">
+                <i class="bi bi-crosshair text-white fs-5"></i>
+            </div>
+            <div>
+                <span class="fw-bold fs-5" style="color: #0A2F1F;">Inzira y'agakiza</span>
+                <span class="d-block small fw-light text-secondary" style="line-height: 1.2;">Teaching Gospel to the Nation</span>
+            </div>
+        </a>
+
+        <!-- Toggler button (mobile) -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar links & actions -->
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-2">
+                <li class="nav-item">
+                    <a class="nav-link active fw-semibold" aria-current="page" href="/"><i class="bi bi-house-door me-1"></i>Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="mediaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-collection-play me-1"></i>Media
+                    </a>
+                    <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="mediaDropdown">
+                        <li><a class="dropdown-item" href="/videos/"><i class="bi bi-camera-reels me-2 text-primary"></i>Video</a></li>
+                        <li><a class="dropdown-item" href="/audio/"><i class="bi bi-headphones me-2 text-success"></i>Audio</a></li>
+                        <li><a class="dropdown-item" href="/gallery/"><i class="bi bi-images me-2 text-warning"></i>Gallery</a></li>
+                        <li><a class="dropdown-item" href="/youtube/"><i class="bi bi-youtube me-2 text-danger"></i>YouTube Videos</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-book me-1"></i>Resources
+                    </a>
+                    <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="resourcesDropdown">
+                        <li><a class="dropdown-item" href="/pdf-content/"><i class="bi bi-filetype-pdf me-2 text-danger"></i>PDF Content</a></li>
+                        <li><a class="dropdown-item" href="/slides/"><i class="bi bi-easel me-2 text-info"></i>Teaching Slides</a></li>
+                        <li><a class="dropdown-item" href="/articles/"><i class="bi bi-newspaper me-2 text-secondary"></i>Articles</a></li>
+                        <li><a class="dropdown-item" href="/books/"><i class="bi bi-book-half me-2 text-dark"></i>Books</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/qa/"><i class="bi bi-question-circle me-1"></i>Q&A</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-sm btn-outline-warning px-3 rounded-pill ms-lg-2" style="color:#0A2F1F;" href="/appointment/"><i class="bi bi-calendar-check me-1"></i>Booking</a>
+                </li>
+            </ul>
+            
+            <!-- Right side: search & user actions -->
+            <div class="d-flex gap-2 align-items-center">
+                <form class="d-none d-md-flex" role="search" action="/search/" method="get">
+                    <div class="input-group input-group-sm">
+                        <input class="form-control form-control-sm border-secondary" type="search" placeholder="Search..." aria-label="Search" name="q">
+                        <button class="btn btn-sm" style="background-color: #D4AF37; color: #0A2F1F;" type="submit"><i class="bi bi-search"></i></button>
+                    </div>
+                </form>
+                <a href="#" class="btn btn-sm btn-outline-dark rounded-circle p-2" style="width: 36px; height: 36px;" data-bs-toggle="tooltip" title="User">
+                    <i class="bi bi-person"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- optional mobile search bar (visible under 768px) -->
+<div class="container d-md-none mt-2 px-3" style="margin-top: 10px !important;">
+    <form class="d-flex" role="search" action="/search/">
+        <input class="form-control me-2" type="search" placeholder="Search sermons, articles..." name="q">
+        <button class="btn" style="background-color: #D4AF37; color: #0A2F1F;" type="submit">Go</button>
+    </form>
+</div>
+
+<script>
+    // enable tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+    // active link highlight based on current path (simple)
+    document.addEventListener("DOMContentLoaded", function() {
+        let currentPath = window.location.pathname;
+        document.querySelectorAll('.nav-link').forEach(link => {
+            let href = link.getAttribute('href');
+            if(href && href !== '/' && currentPath.startsWith(href) && href !== '#') {
+                link.classList.add('active', 'fw-semibold');
+                if(link.classList.contains('dropdown-toggle')) return;
+            } else if(href === '/' && currentPath === '/') {
+                link.classList.add('active', 'fw-semibold');
+            }
+        });
+    });
+</script>

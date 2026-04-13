@@ -1,0 +1,76 @@
+<!-- footer.html -->
+<footer class="bg-dark text-white pt-5 pb-4 mt-5" style="border-top: 4px solid #D4AF37;">
+    <div class="container">
+        <div class="row gy-4">
+            <!-- About Section -->
+            <div class="col-lg-4 col-md-6">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-2 bg-white bg-opacity-10 rounded p-2">
+                        <i class="bi bi-crosshair fs-4" style="color: #D4AF37;"></i>
+                    </div>
+                    <span class="fw-bold fs-5">Inzira y'agakiza</span>
+                </div>
+                <p class="text-white-50 small">Teaching the Gospel to the Nation with clarity and truth. We provide resources, biblical teachings, and community support to grow in faith.</p>
+                <div class="mt-3">
+                    <a href="#" class="text-white-50 me-3"><i class="bi bi-facebook fs-5"></i></a>
+                    <a href="#" class="text-white-50 me-3"><i class="bi bi-youtube fs-5"></i></a>
+                    <a href="#" class="text-white-50 me-3"><i class="bi bi-instagram fs-5"></i></a>
+                    <a href="#" class="text-white-50"><i class="bi bi-whatsapp fs-5"></i></a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-uppercase fw-semibold mb-3" style="color: #D4AF37;">Explore</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/videos/" class="text-white-50 text-decoration-none small">Video</a></li>
+                    <li class="mb-2"><a href="/audio/" class="text-white-50 text-decoration-none small">Audio</a></li>
+                    <li class="mb-2"><a href="/gallery/" class="text-white-50 text-decoration-none small">Gallery</a></li>
+                    <li class="mb-2"><a href="/books/" class="text-white-50 text-decoration-none small">Books</a></li>
+                    <li class="mb-2"><a href="/articles/" class="text-white-50 text-decoration-none small">Articles</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h6 class="text-uppercase fw-semibold mb-3" style="color: #D4AF37;">Resources</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/pdf-content/" class="text-white-50 text-decoration-none small">PDF Content</a></li>
+                    <li class="mb-2"><a href="/slides/" class="text-white-50 text-decoration-none small">Teaching Slides</a></li>
+                    <li class="mb-2"><a href="/qa/" class="text-white-50 text-decoration-none small">Q&A</a></li>
+                    <li class="mb-2"><a href="/youtube/" class="text-white-50 text-decoration-none small">YouTube</a></li>
+                    <li class="mb-2"><a href="/appointment/" class="text-white-50 text-decoration-none small">Booking</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <h6 class="text-uppercase fw-semibold mb-3" style="color: #D4AF37;">Stay Connected</h6>
+                <p class="text-white-50 small">Get updates on new sermons, articles, and events.</p>
+                <form action="/subscribe/" method="post" class="d-flex gap-2">
+                    {% csrf_token %}
+                    <input type="email" class="form-control form-control-sm bg-dark border-secondary text-white" placeholder="Your email address" required>
+                    <button type="submit" class="btn btn-sm" style="background-color: #D4AF37; color: #0A2F1F;">Subscribe</button>
+                </form>
+                <p class="mt-3 small text-white-50"><i class="bi bi-envelope me-1"></i> hello@inziraagakiza.rw</p>
+                <p class="small text-white-50"><i class="bi bi-telephone me-1"></i> +250 788 123 456</p>
+            </div>
+        </div>
+        <hr class="mt-4 opacity-25">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start small text-white-50">
+                &copy; {% now "Y" %} Inzira y'agakiza. All rights reserved. Teaching Gospel to the Nation.
+            </div>
+            <div class="col-md-6 text-center text-md-end small">
+                <a href="#" class="text-white-50 me-3">Privacy Policy</a>
+                <a href="#" class="text-white-50">Terms of Use</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    footer a:hover {
+        color: #D4AF37 !important;
+        transition: 0.2s;
+    }
+    footer .btn:hover {
+        background-color: #c2a12a !important;
+    }
+</style>
