@@ -1,0 +1,29 @@
+{% load i18n %}
+{% if featured_questions %}
+<section class="qa-top-section mb-4" aria-labelledby="qaTopHeading">
+    <div class="qa-top-card">
+        <div class="qa-top-card-icon" aria-hidden="true">
+            <i class="bi bi-journals"></i>
+            <span class="qa-top-card-q">?</span>
+        </div>
+        <div>
+            <h2 id="qaTopHeading" class="qa-top-card-title">{{ qa_featured_heading }}</h2>
+            <p class="qa-top-card-desc mb-0">{% trans "Our most helpful Scripture-based answers — tap any question to read the full response." %}</p>
+        </div>
+    </div>
+    <ol class="qa-top-list">
+        {% for q in featured_questions %}
+        <li>
+            <a href="{% url 'qa_detail' q.pk %}" class="qa-top-link">
+                <span class="qa-top-rank">{{ forloop.counter }}</span>
+                <span>{{ q.display_title }}</span>
+                {% if q.has_video_answer %}<i class="bi bi-play-circle text-danger ms-auto" title="{% trans 'Video answer' %}"></i>{% endif %}
+            </a>
+        </li>
+        {% endfor %}
+    </ol>
+    <a href="{% url 'qa' %}?featured=1" class="btn btn-sm btn-outline-dark rounded-pill mt-2">
+        {% trans "See featured only" %} →
+    </a>
+</section>
+{% endif %}

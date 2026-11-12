@@ -1,0 +1,30 @@
+{% load i18n %}
+{# Video: custom or YouTube thumbnail; click to play inline or open on YouTube #}
+{% if q.answer_youtube_id %}
+<div class="qa-video-player mb-3" data-embed-url="{{ q.answer_youtube_embed_autoplay }}" data-watch-url="{{ q.answer_watch_url }}">
+    <button type="button" class="qa-video-facade w-100 border-0 p-0" data-qa-video-play aria-label="{% trans 'Play video answer' %}">
+        <span class="qa-answer-video-thumb d-block">
+            {% if q.has_display_answer_thumbnail %}
+            {% include "core/includes/display_thumbnail_img.html" with thumb_url=q.display_answer_thumbnail_url thumb_fallback=q.display_answer_thumbnail_fallback_url uses_cdn=q.uses_youtube_cdn_answer_thumbnail alt="Video answer" %}
+            {% else %}
+            <span class="qa-video-thumb-placeholder d-flex align-items-center justify-content-center">
+                <i class="bi bi-youtube display-4 text-danger"></i>
+            </span>
+            {% endif %}
+            <span class="qa-answer-video-play" aria-hidden="true"><i class="bi bi-play-fill"></i></span>
+        </span>
+    </button>
+    <p class="small text-secondary mt-2 mb-0">
+        {% if q.answer_youtube_thumbnail %}
+        {% trans "Custom cover image" %} ·
+        {% elif q.uses_youtube_cdn_answer_thumbnail %}
+        {% trans "YouTube thumbnail" %} ·
+        {% endif %}
+        <a href="{{ q.answer_watch_url }}" class="fw-semibold">{% trans "Open on YouTube" %}</a>
+    </p>
+</div>
+{% elif q.answer_watch_url %}
+<a href="{{ q.answer_watch_url }}" class="btn btn-sm btn-outline-danger rounded-pill">
+    <i class="bi bi-youtube"></i> {% trans "Watch on YouTube" %}
+</a>
+{% endif %}

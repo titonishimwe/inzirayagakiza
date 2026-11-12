@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Search" %}{% endblock %}
+
+{% block content %}
+
+<div class="container py-5" style="max-width: 900px;">
+
+    <h2 class="fw-bold mb-3" style="color:#0A2F1F;">
+        {% if query %}
+        {% blocktrans with q=query %}Search results for "{{ q }}"{% endblocktrans %}
+        {% else %}
+        {% trans "Search" %}
+        {% endif %}
+    </h2>
+
+    <form method="get" action="{% url 'search' %}" class="card border-0 shadow-sm p-3 mb-4">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-6">
+                <label class="form-label small fw-semibold">{% trans "Keywords" %}</label>
+                <input type="search" name="q" class="form-control" placeholder="{% trans 'Search resources…' %}" value="{{ query }}" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small fw-semibold">{% trans "Type" %}</label>
+                <select name="type" class="form-select">
+                    <option value="">{% trans "All types" %}</option>
+                    <option value="video" {% if active_filters.type == 'video' %}selected{% endif %}>{% trans "Video" %}</option>
+                    <option value="audio" {% if active_filters.type == 'audio' %}selected{% endif %}>{% trans "Audio" %}</option>
+                    <option value="pdf" {% if active_filters.type == 'pdf' %}selected{% endif %}>{% trans "PDF" %}</option>
+                    <option value="slides" {% if active_filters.type == 'slides' %}selected{% endif %}>{% trans "Slides" %}</option>
+                    <option value="sermon" {% if active_filters.type == 'sermon' %}selected{% endif %}>{% trans "Sermon" %}</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-dark w-100"><i class="bi bi-search"></i> {% trans "Search" %}</button>
+            </div>
+        </div>
+    </form>
+
+    {% if query %}
+    {% if results %}
+    <p class="text-secondary small mb-3">
+        {% blocktrans count counter=filtered_count %}{{ counter }} resource found{% plural %}{{ counter }} resources found{% endblocktrans %}
+        {% if page_obj.paginator.num_pages > 1 %}
+        · {% blocktrans with num=page_obj.number total=page_obj.paginator.num_pages %}Page {{ num }} of {{ total }}{% endblocktrans %}
+        {% endif %}
+    </p>
+    {% for r in results %}
+    <div class="card mb-2 border-0 shadow-sm">
+        <div class="card-body py-3 d-flex flex-wrap align-items-center gap-3">
+            {% if r.has_display_thumbnail %}
+            <div style="width:80px;height:48px;flex-shrink:0;">
+                {% include "core/includes/display_thumbnail_img.html" with thumb_url=r.display_thumbnail_url thumb_fallback=r.display_thumbnail_fallback_url uses_cdn=r.uses_youtube_cdn_thumbnail alt=r.title extra_class="rounded w-100 h-100" extra_style="object-fit:cover;" %}
+            </div>
+            {% endif %}
+            <div class="flex-grow-1 min-width-0">
+                <div class="fw-semibold">{{ r.title }}</div>
+                <span class="badge bg-light text-dark border">{{ r.get_resource_type_display }}</span>
+                {% if r.description %}<p class="small text-secondary mb-0 mt-1">{{ r.description|truncatewords:20 }}</p>{% endif %}
+            </div>
+            {% if r.primary_url %}
+            <a href="{{ r.primary_url }}" class="btn btn-sm btn-outline-dark rounded-pill">{% trans "Open" %}</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    {% include "core/includes/pagination_nav.html" %}
+    {% else %}
+    <p class="text-secondary">{% trans "No resources found." %}</p>
+    {% endif %}
+    {% else %}
+    <p class="text-secondary">{% trans "Enter a search term above, or use the search box in the navbar." %}</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

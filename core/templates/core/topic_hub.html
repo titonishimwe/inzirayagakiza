@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}{{ category.name }} | {% trans "Topics" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/qa.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5 qa-page">
+    <nav class="qa-breadcrumb mb-3">
+        <a href="{% url 'qa' %}"><i class="bi bi-arrow-left"></i> {% trans "Q&A" %}</a>
+        <span class="text-secondary mx-2">/</span>
+        <span class="fw-semibold">{{ category.name }}</span>
+    </nav>
+
+    <header class="qa-top-card mb-4">
+        <div class="qa-top-card-icon" aria-hidden="true">
+            <i class="bi {{ category.icon }}"></i>
+        </div>
+        <div>
+            <h1 class="qa-top-card-title mb-1">{{ category.name }}</h1>
+            <p class="qa-top-card-desc mb-2">{{ category.description }}</p>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="qa-stat-pill"><i class="bi bi-chat-square-quote"></i> {{ content.qa_count }} {% trans "answers" %}</span>
+                <span class="qa-stat-pill"><i class="bi bi-camera-reels"></i> {{ content.video_count }} {% trans "videos" %}</span>
+                <span class="qa-stat-pill"><i class="bi bi-headphones"></i> {{ content.audio_count }} {% trans "audio" %}</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            {% if content.qa_items %}
+            <section class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 fw-bold mb-0" style="color:var(--qa-dark);"><i class="bi bi-chat-square-quote"></i> {% trans "Q&A answers" %}</h2>
+                    <a href="{% url 'qa' %}?category={{ category.slug }}" class="small fw-semibold">{% trans "See all" %} →</a>
+                </div>
+                {% for q in content.qa_items %}
+                {% include "core/includes/qa_question_card.html" %}
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            {% if content.videos %}
+            <section class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 fw-bold mb-0" style="color:var(--qa-dark);"><i class="bi bi-camera-reels"></i> {% trans "Videos" %}</h2>
+                    <a href="{% url 'youtube' %}?category={{ category.slug }}" class="small fw-semibold">{% trans "See all" %} →</a>
+                </div>
+                <ul class="qa-related-list qa-related-list-cards">
+                    {% for v in content.videos %}
+                    <li class="qa-related-media-card">
+                        <a href="{{ v.watch_url }}" class="fw-semibold">{{ v.title }}</a>
+                        <span class="small text-secondary d-block">{{ v.published_at|date:"M j, Y" }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+            {% if content.audio_items %}
+            <section class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 fw-bold mb-0" style="color:var(--qa-dark);"><i class="bi bi-headphones"></i> {% trans "Audio" %}</h2>
+                    <a href="{% url 'audio' %}?category={{ category.slug }}" class="small fw-semibold">{% trans "See all" %} →</a>
+                </div>
+                <ul class="qa-related-list qa-related-list-cards">
+                    {% for a in content.audio_items %}
+                    <li class="qa-related-media-card">
+                        <a href="{{ a.watch_url }}" class="fw-semibold">{{ a.title }}</a>
+                        <span class="small text-secondary d-block">{{ a.published_at|date:"M j, Y" }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+            {% if not content.qa_items and not content.videos and not content.audio_items %}
+            <div class="qa-empty">
+                <p class="text-secondary mb-0">{% trans "Nothing published in this topic yet. Check back soon." %}</p>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-4 d-none d-lg-block">
+            <div class="qa-aside-sticky">
+                {% include "core/includes/qa_aside.html" with active_category=category %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

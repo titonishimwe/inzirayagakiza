@@ -1,0 +1,220 @@
+{% extends "core/dashboard/base.html" %}
+{% load static %}
+
+{% block dashboard_title %}Question detail{% endblock %}
+{% block extra_dashboard_head %}
+<link rel="stylesheet" href="{% static 'css/qa.css' %}">
+{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+    <a href="{% url 'dashboard_questions' %}" class="text-decoration-none small fw-semibold" style="color:#0A2F1F;"><i class="bi bi-arrow-left"></i> Back to questions</a>
+
+    {% if question.is_public and question.status == 'answered' %}
+
+    <a href="{% url 'qa_detail' question.pk %}" class="btn btn-sm btn-outline-success rounded-pill">
+
+        <i class="bi bi-eye"></i> View on public Q&amp;A
+
+    </a>
+
+    {% endif %}
+
+</div>
+
+
+
+<div class="row g-4">
+
+    <div class="col-lg-8">
+
+        <div class="dash-panel mb-4">
+
+            <div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
+
+                <div>
+
+                    <strong>{{ question.asker_name }}</strong> &lt;{{ question.asker_email }}&gt;
+
+                    <span class="badge ms-2 {% if question.status == 'pending' %}bg-warning text-dark{% elif question.status == 'answered' %}bg-success{% else %}bg-secondary{% endif %}">{{ question.get_status_display }}</span>
+
+                    {% if question.is_public %}<span class="badge bg-info text-dark">Public</span>{% endif %}
+
+                    {% if question.is_featured %}<span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> Featured</span>{% endif %}
+
+                </div>
+
+                <small class="text-muted">{{ question.created_at }}</small>
+
+            </div>
+
+            {% if question.category %}<span class="badge bg-light text-dark border mb-2">{{ question.category.name }}</span>{% endif %}
+
+            <h3 class="h5 fw-bold">{{ question.display_title }}</h3>
+
+            <p class="mb-0" style="white-space:pre-wrap;">{{ question.question_text }}</p>
+
+        </div>
+
+
+
+        {% if question.status == 'answered' %}
+
+        <div class="dash-panel">
+
+            <span class="qa-answer-label-dash">ANSWER</span>
+
+            {% if question.answer_text %}<div class="mb-3 qa-preview-answer" style="white-space:pre-wrap;">{{ question.answer_text }}</div>{% endif %}
+
+            {% include "core/includes/qa_video_player.html" with q=question %}
+
+            {% if question.recommended_resources.exists %}
+
+            <p class="small fw-semibold mb-1">Recommended resources:</p>
+
+            <ul class="small mb-0">
+
+                {% for r in question.recommended_resources.all %}
+
+                <li>{{ r.title }}</li>
+
+                {% endfor %}
+
+            </ul>
+
+            {% endif %}
+
+            <p class="small text-muted mt-3 mb-0">
+
+                Answered {{ question.answered_at|date:"M j, Y" }}{% if question.answered_by %} by {{ question.answered_by }}{% endif %}
+
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <div class="col-lg-4">
+
+        <div class="dash-panel mb-3" style="background:linear-gradient(135deg,rgba(10,47,31,0.06),#fff);">
+
+            <h3 class="h6 fw-bold mb-2" style="color:#0A2F1F;"><i class="bi bi-globe2"></i> Public Q&amp;A</h3>
+
+            <p class="small text-secondary mb-2">
+
+                Published answers appear on <a href="{% url 'qa' %}">/qa/</a>. Featured questions fill the “top questions” list (up to 20).
+
+            </p>
+
+            <ul class="small mb-0 ps-3">
+
+                <li>Public: {% if question.is_public %}Yes{% else %}No{% endif %}</li>
+
+                <li>Featured: {% if question.is_featured %}Yes{% else %}No{% endif %}</li>
+
+            </ul>
+
+        </div>
+
+        <div class="dash-panel">
+
+            <h3 class="h6 fw-bold mb-3">Actions</h3>
+
+            <div class="d-grid gap-2">
+
+                {% if question.status != 'answered' %}
+
+                <a href="{% url 'dashboard_answer_question' question.pk %}" class="btn btn-dash-primary">Write answer</a>
+
+                {% else %}
+
+                <a href="{% url 'dashboard_answer_question' question.pk %}" class="btn btn-outline-dark">Edit answer</a>
+
+                {% endif %}
+
+                <form method="post" class="d-grid gap-2">
+
+                    {% csrf_token %}
+
+                    {% if question.status == 'answered' %}
+
+                    <button type="submit" name="action" value="toggle_public" class="btn btn-outline-secondary w-100">
+
+                        Make {% if question.is_public %}private{% else %}public{% endif %}
+
+                    </button>
+
+                    {% if question.is_public %}
+
+                    <button type="submit" name="action" value="toggle_featured" class="btn btn-outline-warning w-100">
+
+                        {% if question.is_featured %}Remove from top list{% else %}Add to top questions{% endif %}
+
+                    </button>
+
+                    {% endif %}
+
+                    {% endif %}
+
+                    {% if question.status != 'archived' %}
+
+                    <button type="submit" name="action" value="archive" class="btn btn-outline-warning w-100">Archive</button>
+
+                    {% else %}
+
+                    <button type="submit" name="action" value="pending" class="btn btn-outline-secondary w-100">Restore to pending</button>
+
+                    {% endif %}
+
+                    <button type="submit" name="action" value="delete" class="btn btn-outline-danger w-100" onclick="return confirm('Delete this question permanently?');">Delete</button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+    .qa-answer-label-dash {
+
+        display: inline-block;
+
+        font-size: 0.65rem;
+
+        font-weight: 800;
+
+        letter-spacing: 0.08em;
+
+        background: #2e7d32;
+
+        color: #fff;
+
+        padding: 0.2rem 0.5rem;
+
+        border-radius: 3px;
+
+        margin-bottom: 0.75rem;
+
+    }
+
+    .qa-preview-answer { color: #4a5568; line-height: 1.65; }
+
+</style>
+
+{% endblock %}
+
+{% block extra_dashboard_js %}
+<script src="{% static 'js/qa-video.js' %}"></script>
+{% endblock %}
+

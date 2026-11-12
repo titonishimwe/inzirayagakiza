@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} | Inzira y'ubugingo{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold mb-4" style="color:#0A2F1F;">{{ page_title }}</h2>
+    {% include "core/includes/public_filters_bar.html" with filter_action=filter_action clear_url=filter_action %}
+    <div class="row g-4">
+        {% for r in resources %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                {% if r.has_display_thumbnail %}
+                {% include "core/includes/display_thumbnail_img.html" with thumb_url=r.display_thumbnail_url thumb_fallback=r.display_thumbnail_fallback_url uses_cdn=r.uses_youtube_cdn_thumbnail alt=r.title extra_class="card-img-top" %}
+                {% endif %}
+                <div class="card-body">
+                    <span class="badge bg-warning text-dark mb-2">{{ r.get_resource_type_display }}</span>
+                    <h5 class="card-title">{{ r.title }}</h5>
+                    <p class="card-text small text-secondary">{{ r.description|truncatewords:25 }}</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% if r.youtube_url %}
+                        <a href="{{ r.youtube_url }}" class="btn btn-sm btn-danger">YouTube</a>
+                        {% endif %}
+                        {% if r.file %}
+                        <a href="{{ r.file.url }}" class="btn btn-sm btn-outline-dark">Download</a>
+                        {% endif %}
+                        {% if r.external_url %}
+                        <a href="{{ r.external_url }}" class="btn btn-sm btn-outline-primary">Open</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12"><p class="text-secondary">No resources published yet. Check back soon.</p></div>
+        {% endfor %}
+    </div>
+    {% include "core/includes/pagination_nav.html" %}
+</div>
+{% endblock %}

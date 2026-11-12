@@ -1,0 +1,75 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}{{ resource.title }}{% endblock %}
+{% block dashboard_content %}
+<div class="mb-4">
+    <a href="{% url 'dashboard_resources' %}" class="text-secondary text-decoration-none small">
+        <i class="bi bi-arrow-left"></i> All resources
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            {% if resource.has_display_thumbnail %}
+            {% include "core/includes/display_thumbnail_img.html" with thumb_url=resource.display_thumbnail_url thumb_fallback=resource.display_thumbnail_fallback_url uses_cdn=resource.uses_youtube_cdn_thumbnail alt=resource.title extra_class="w-100" extra_style="max-height:280px;object-fit:cover;" %}
+            {% endif %}
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="badge bg-light text-dark border"><i class="bi {{ type_icon }} me-1"></i>{{ type_label }}</span>
+                    {% if resource.is_published %}<span class="badge bg-success">Published</span>{% else %}<span class="badge bg-secondary">Draft</span>{% endif %}
+                    {% if resource.is_featured %}<span class="badge bg-warning text-dark">Featured</span>{% endif %}
+                </div>
+                <h1 class="h3 fw-bold mb-3" style="color:#0A2F1F;">{{ resource.title }}</h1>
+                {% if resource.description %}
+                <p class="text-secondary">{{ resource.description|linebreaks }}</p>
+                {% endif %}
+
+                <dl class="row small mt-4 mb-0">
+                    {% if resource.youtube_url %}
+                    <dt class="col-sm-3">{% if resource.resource_type == 'audio' %}YouTube (audio){% else %}YouTube{% endif %}</dt>
+                    <dd class="col-sm-9"><a href="{{ resource.youtube_url }}">{{ resource.youtube_url }}</a></dd>
+                    {% endif %}
+                    {% if resource.external_url %}
+                    <dt class="col-sm-3">External link</dt>
+                    <dd class="col-sm-9"><a href="{{ resource.external_url }}">{{ resource.external_url }}</a></dd>
+                    {% endif %}
+                    {% if resource.file %}
+                    <dt class="col-sm-3">File</dt>
+                    <dd class="col-sm-9"><a href="{{ resource.file.url }}">Download file</a></dd>
+                    {% endif %}
+                    <dt class="col-sm-3">Created</dt>
+                    <dd class="col-sm-9">{{ resource.created_at|date:"M j, Y g:i A" }}</dd>
+                    <dt class="col-sm-3">Updated</dt>
+                    <dd class="col-sm-9">{{ resource.updated_at|date:"M j, Y g:i A" }}</dd>
+                    {% if resource.created_by %}
+                    <dt class="col-sm-3">Author</dt>
+                    <dd class="col-sm-9">{{ resource.created_by.get_full_name|default:resource.created_by.username }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+            <h6 class="fw-bold mb-3" style="color:#0A2F1F;">Actions</h6>
+            {% if can_manage %}
+            <a href="{% url 'dashboard_resource_edit' resource.pk %}" class="btn w-100 rounded-pill mb-2" style="background:#D4AF37;color:#0A2F1F;font-weight:600;">
+                <i class="bi bi-pencil"></i> Edit resource
+            </a>
+            <form method="post" action="{% url 'dashboard_resource_toggle_publish' resource.pk %}" class="mb-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-secondary w-100 rounded-pill">
+                    {% if resource.is_published %}<i class="bi bi-eye-slash"></i> Unpublish{% else %}<i class="bi bi-eye"></i> Publish{% endif %}
+                </button>
+            </form>
+            <a href="{% url 'dashboard_resource_delete' resource.pk %}" class="btn btn-outline-danger w-100 rounded-pill">
+                <i class="bi bi-trash"></i> Delete
+            </a>
+            {% else %}
+            <p class="small text-secondary mb-0">You can view this resource but only the author or an admin can edit it.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

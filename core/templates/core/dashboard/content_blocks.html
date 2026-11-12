@@ -1,0 +1,50 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Site content{% endblock %}
+{% block dashboard_content %}
+{% include "core/dashboard/includes/page_header.html" with title="Site content" subtitle="Edit homepage text, stats, and Support Us modal (support_* keys). YouTube sections: Homepage video in the sidebar." action_url="/dashboard/site-content/add/" action_label="Add block" action_icon="bi-plus-lg" %}
+
+<div class="dash-panel">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 dash-table">
+            <thead>
+                <tr>
+                    <th>Label</th>
+                    <th>Key</th>
+                    <th>Type</th>
+                    <th>Preview</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for block in blocks %}
+                <tr>
+                    <td class="fw-semibold">{{ block.label }}</td>
+                    <td><code class="small">{{ block.key }}</code></td>
+                    <td><span class="badge bg-light text-dark border">{{ block.get_block_type_display }}</span></td>
+                    <td class="small text-secondary text-truncate" style="max-width:220px;">
+                        {% if block.block_type == 'image' and block.image %}
+                        <img src="{{ block.image.url }}" alt="" height="32" class="rounded">
+                        {% else %}
+                        {{ block.value|truncatechars:60 }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if block.is_active %}
+                        <span class="badge bg-success-subtle text-success border">Active</span>
+                        {% else %}
+                        <span class="badge bg-secondary-subtle text-secondary">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'dashboard_content_block_edit' block.pk %}" class="btn btn-sm btn-outline-dark">Edit</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-secondary py-4">No content blocks yet. Run <code>setup_site</code> or add one.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

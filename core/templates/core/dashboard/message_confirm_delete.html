@@ -1,0 +1,14 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Delete message{% endblock %}
+{% block dashboard_content %}
+<div class="dash-panel" style="max-width:480px;">
+    <h2 class="h5 fw-bold mb-3" style="color:#0A2F1F;">Delete this message?</h2>
+    <p class="text-secondary">Remove the message from <strong>{{ contact.full_name }}</strong> ({{ contact.created_at|date:"M j, Y" }}). This cannot be undone.</p>
+    <p class="small p-3 rounded-3 bg-light">{{ contact.message|truncatewords:30 }}</p>
+    <form method="post" class="d-flex gap-2">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete permanently</button>
+        <a href="{% url 'dashboard_message_detail' contact.pk %}" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

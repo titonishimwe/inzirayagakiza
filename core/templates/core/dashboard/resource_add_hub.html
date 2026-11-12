@@ -1,0 +1,52 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Add Resource{% endblock %}
+{% block dashboard_content %}
+<div class="mb-4">
+    <a href="{% url 'dashboard_resources' %}" class="text-secondary text-decoration-none small">
+        <i class="bi bi-arrow-left"></i> Back to all resources
+    </a>
+    <h2 class="fw-bold mt-2 mb-1" style="color:#0A2F1F;">Add a resource</h2>
+    <p class="text-secondary mb-0">Choose what you want to publish — each type has its own simple form.</p>
+</div>
+
+<div class="row g-4">
+    {% for slug, cfg in resource_types.items %}
+    <div class="col-sm-6 col-lg-4">
+        <a href="{% url 'dashboard_resource_create' slug %}" class="text-decoration-none">
+            <div class="card h-100 border-0 shadow-sm resource-type-card">
+                <div class="card-body p-4 text-center">
+                    <div class="resource-type-icon mx-auto mb-3" style="background:{{ cfg.color }}20;color:{{ cfg.color }};">
+                        <i class="bi {{ cfg.icon }}"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2" style="color:#0A2F1F;">{{ cfg.label }}</h5>
+                    <p class="small text-secondary mb-3">{{ cfg.description }}</p>
+                    <span class="btn btn-sm rounded-pill px-3" style="background:#D4AF37;color:#0A2F1F;font-weight:600;">
+                        Add {{ cfg.label }} <i class="bi bi-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .resource-type-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: 1rem !important;
+    }
+    .resource-type-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(10,47,31,0.12) !important;
+    }
+    .resource-type-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+    }
+</style>
+{% endblock %}

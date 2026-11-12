@@ -1,6 +1,7 @@
-<!-- example usage: any page extending base, e.g., home.html -->
+﻿<!-- example usage: any page extending base, e.g., home.html -->
 {% extends "base.html" %}
-{% block title %}Inzira y'agakiza - Home | Teaching Gospel to the Nation{% endblock %}
+{% load i18n %}
+{% block title %}Inzira y'ubugingo - {% trans "Home" %} | {% trans "Teaching Gospel to the Nation" %}{% endblock %}
 
 {% block content %}
 <!-- Hero Section with gospel theme -->
@@ -11,31 +12,31 @@
             <div class="col-lg-7 hero-content-left" data-aos="fade-right" data-aos-duration="1000">
                 <div class="hero-badge">
                     <i class="bi bi-megaphone-fill"></i>
-                    <span>Teaching Gospel to the Nation</span>
+                    <span>{{ hero_tagline }}</span>
                 </div>
-                <h1 class="hero-main-title">Inzira y'agakiza</h1>
-                <p class="hero-description">Equipping believers, spreading truth, and transforming lives through the Word of God.</p>
+                <h1 class="hero-main-title">{{ hero_title }}</h1>
+                <p class="hero-description">{{ hero_subtitle }}</p>
                 <div class="hero-button-group">
-                    <a href="/videos/" class="btn btn-watch-sermons">
-                        <i class="bi bi-play-circle-fill"></i> Watch Sermons
+                    <a href="{% if site_blocks.youtube_channel_url %}{{ site_blocks.youtube_channel_url }}{% else %}{% url 'youtube' %}{% endif %}" class="btn btn-watch-sermons">
+                        <i class="bi bi-play-circle-fill"></i> {% trans "Watch Sermons" %}
                     </a>
-                    <a href="/books/" class="btn btn-explore-books">
-                        <i class="bi bi-book"></i> Explore Books
+                    <a href="{% url 'audio' %}" class="btn btn-hero-secondary">
+                        <i class="bi bi-headphones"></i> {% trans "Listen to Audio" %}
                     </a>
                 </div>
                 <!-- Trust indicators -->
                 <div class="hero-stats">
                     <div class="stat">
-                        <span class="stat-number">1.2k+</span>
-                        <span class="stat-label">Sermons</span>
+                        <span class="stat-number">{{ stat_sermons }}</span>
+                        <span class="stat-label">{% trans "Sermons" %}</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">350+</span>
-                        <span class="stat-label">Audio</span>
+                        <span class="stat-number">{{ stat_audio }}</span>
+                        <span class="stat-label">{% trans "Audio" %}</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">40+</span>
-                        <span class="stat-label">Books</span>
+                        <span class="stat-number">{{ stat_pdfs }}</span>
+                        <span class="stat-label">{% trans "PDFs" %}</span>
                     </div>
                 </div>
             </div>
@@ -45,8 +46,12 @@
                     <div class="hero-card-icon">
                         <i class="bi bi-bible"></i>
                     </div>
-                    <p class="verse-text">"Your word is a lamp to my feet and a light to my path."</p>
-                    <p class="verse-reference">— Psalm 119:105</p>
+                    {% if hero_verse_text %}
+                    <p class="verse-text">"{{ hero_verse_text }}"</p>
+                    {% endif %}
+                    {% if hero_verse_reference %}
+                    <p class="verse-reference">— {{ hero_verse_reference }}</p>
+                    {% endif %}
                     <div class="card-features">
                         <span><i class="bi bi-youtube"></i> YouTube</span>
                         <span><i class="bi bi-headphones"></i> Podcast</span>
@@ -210,7 +215,7 @@
         color: #0A2F1F;
     }
 
-    .btn-explore-books {
+    .btn-hero-secondary {
         background: transparent;
         border: 2px solid rgba(255, 255, 245, 0.6);
         color: white;
@@ -220,10 +225,10 @@
         transition: all 0.3s ease;
         backdrop-filter: blur(4px);
     }
-    .btn-explore-books i {
+    .btn-hero-secondary i {
         margin-right: 8px;
     }
-    .btn-explore-books:hover {
+    .btn-hero-secondary:hover {
         background: rgba(255, 255, 255, 0.12);
         border-color: #D4AF37;
         transform: translateY(-3px);
@@ -296,10 +301,11 @@
     .verse-text {
         font-style: italic;
         font-weight: 500;
-        font-size: 1.15rem;
+        font-size: clamp(0.85rem, 2.2vw, 1.05rem);
         color: #F5E7B2;
-        line-height: 1.5;
+        line-height: 1.55;
         margin-bottom: 0.75rem;
+        max-width: 100%;
     }
     .verse-reference {
         color: #D4AF37;
@@ -374,7 +380,7 @@
         .hero-description {
             font-size: 1rem;
         }
-        .btn-watch-sermons, .btn-explore-books {
+        .btn-watch-sermons, .btn-hero-secondary {
             padding: 0.7rem 1.5rem;
             font-size: 0.9rem;
         }
@@ -388,90 +394,195 @@
             font-size: 0.75rem;
         }
     }
+
+    .home-resource-icon {
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border-radius: 50%;
+        padding: 0;
+    }
+    .home-resource-icon i {
+        font-size: 1.75rem;
+        line-height: 1;
+    }
 </style>
 
 <!-- Content categories preview -->
 <section class="container my-5 py-4">
     <div class="text-center mb-5">
-        <span class="badge bg-warning text-dark px-3 py-2 mb-2">Our Resources</span>
-        <h2 class="fw-bold" style="color: #0A2F1F;">Faith-building media & teachings</h2>
-        <p class="text-secondary">Explore all formats to grow in grace and knowledge</p>
+        <span class="badge bg-warning text-dark px-3 py-2 mb-2">{% trans "Our Resources" %}</span>
+        <h2 class="fw-bold" style="color: #0A2F1F;">{% trans "Faith-building media & teachings" %}</h2>
+        <p class="text-secondary">{% trans "Explore all formats to grow in grace and knowledge" %}</p>
     </div>
     <div class="row g-4">
         <div class="col-md-6 col-lg-3">
             <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-3">
-                <div class="bg-warning bg-opacity-10 rounded-circle mx-auto p-3 mb-3" style="width: 70px;"><i class="bi bi-camera-reels fs-1 text-warning"></i></div>
-                <h5 class="fw-bold">Video</h5>
-                <p class="small text-secondary">Sermons, teachings, and worship moments.</p>
-                <a href="/videos/" class="stretched-link"></a>
+                <div class="home-resource-icon bg-danger bg-opacity-10 mx-auto mb-3"><i class="bi bi-youtube text-danger"></i></div>
+                <h5 class="fw-bold">{% trans "YouTube Videos" %}</h5>
+                <p class="small text-secondary">{% trans "Sermons, teachings, and worship moments." %}</p>
+                <a href="{% url 'youtube' %}" class="stretched-link"></a>
             </div>
         </div>
         <div class="col-md-6 col-lg-3">
             <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-3">
-                <div class="bg-success bg-opacity-10 rounded-circle mx-auto p-3 mb-3" style="width: 70px;"><i class="bi bi-headphones fs-1 text-success"></i></div>
-                <h5 class="fw-bold">Audio</h5>
-                <p class="small text-secondary">Podcasts, messages, and audio devotionals.</p>
+                <div class="home-resource-icon bg-success bg-opacity-10 mx-auto mb-3"><i class="bi bi-headphones text-success"></i></div>
+                <h5 class="fw-bold">{% trans "Audio" %}</h5>
+                <p class="small text-secondary">{% trans "Podcasts, messages, and audio devotionals." %}</p>
                 <a href="/audio/" class="stretched-link"></a>
             </div>
         </div>
         <div class="col-md-6 col-lg-3">
             <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-3">
-                <div class="bg-info bg-opacity-10 rounded-circle mx-auto p-3 mb-3" style="width: 70px;"><i class="bi bi-filetype-pdf fs-1 text-danger"></i></div>
-                <h5 class="fw-bold">PDF & Slides</h5>
-                <p class="small text-secondary">Study guides, notes, and teaching slides.</p>
+                <div class="home-resource-icon bg-info bg-opacity-10 mx-auto mb-3"><i class="bi bi-filetype-pdf text-danger"></i></div>
+                <h5 class="fw-bold">{% trans "PDF & Slides" %}</h5>
+                <p class="small text-secondary">{% trans "Study guides, notes, and teaching slides." %}</p>
                 <a href="/pdf-content/" class="stretched-link"></a>
             </div>
         </div>
         <div class="col-md-6 col-lg-3">
             <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-3">
-                <div class="bg-primary bg-opacity-10 rounded-circle mx-auto p-3 mb-3" style="width: 70px;"><i class="bi bi-chat-dots fs-1 text-primary"></i></div>
-                <h5 class="fw-bold">Q&A / Booking</h5>
-                <p class="small text-secondary">Ask questions or schedule an appointment.</p>
+                <div class="home-resource-icon bg-primary bg-opacity-10 mx-auto mb-3"><i class="bi bi-chat-dots text-primary"></i></div>
+                <h5 class="fw-bold">{% trans "Q&A / Contact" %}</h5>
+                <p class="small text-secondary">{% trans "Ask questions or get in touch with the pastor." %}</p>
                 <a href="/qa/" class="stretched-link"></a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Featured YouTube / latest article teaser -->
-<section class="bg-light py-5">
+<!-- Featured YouTube (thumbnail + link — managed in dashboard) -->
+<style>
+    .home-yt-thumb-link {
+        display: block;
+        position: relative;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 8px 28px rgba(10, 47, 31, 0.12);
+        text-decoration: none;
+    }
+    .home-yt-thumb-link img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.35s ease;
+    }
+    .home-yt-thumb-link:hover img { transform: scale(1.03); }
+    .home-yt-play {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(10, 47, 31, 0.25);
+        transition: background 0.25s ease;
+    }
+    .home-yt-thumb-link:hover .home-yt-play { background: rgba(10, 47, 31, 0.4); }
+    .home-yt-play-btn {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: #D4AF37;
+        color: #0A2F1F;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+    .home-yt-title-overlay {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 1rem 1.1rem;
+        background: linear-gradient(transparent, rgba(10, 47, 31, 0.85));
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.95rem;
+        line-height: 1.35;
+    }
+    .home-yt-section .ratio {
+        --bs-aspect-ratio: 56.25%;
+    }
+    .home-yt-section .home-yt-thumb-link,
+    .home-yt-section .ratio > .home-yt-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .home-yt-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 100%;
+    }
+    .home-yt-copy h3 {
+        margin-top: 0;
+    }
+</style>
+<section class="bg-light py-5 home-yt-section">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow">
-                    <iframe src="https://www.youtube.com/embed/VIDEO_ID_PLACEHOLDER" title="Latest Sermon" allowfullscreen></iframe>
+        <div class="row g-4 g-lg-5 align-items-start">
+            <div class="col-lg-6">
+                <div class="ratio ratio-16x9">
+                    {% if home_youtube.is_configured and home_youtube.thumbnail_url %}
+                    <a href="{{ home_youtube.watch_url }}" class="home-yt-thumb-link"
+                       {% if home_youtube.video_title %}aria-label="{{ home_youtube.video_title }}"{% else %}aria-label="{% trans 'Watch on YouTube' %}"{% endif %}>
+                        <img src="{{ home_youtube.thumbnail_url }}"
+                             {% if home_youtube.thumbnail_fallback_url and home_youtube.uses_youtube_cdn %}
+                             onerror="this.onerror=null;this.src='{{ home_youtube.thumbnail_fallback_url }}';"
+                             {% endif %}
+                             alt="{% if home_youtube.video_title %}{{ home_youtube.video_title }}{% else %}{% trans 'Featured teaching on YouTube' %}{% endif %}"
+                             loading="lazy" width="640" height="360">
+                        <span class="home-yt-play" aria-hidden="true"><span class="home-yt-play-btn"><i class="bi bi-play-fill"></i></span></span>
+                        {% if home_youtube.video_title %}
+                        <span class="home-yt-title-overlay">{{ home_youtube.video_title }}</span>
+                        {% endif %}
+                    </a>
+                    {% else %}
+                    <div class="home-yt-placeholder d-flex align-items-center justify-content-center bg-dark text-white rounded-4 shadow">
+                        <p class="mb-0 p-3 text-center">{% trans "Featured video coming soon" %}</p>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
-            <div class="col-lg-6">
-                <h3 class="fw-bold" style="color: #0A2F1F;">Latest from YouTube</h3>
-                <p>Watch our recent teachings and subscribe to stay updated with the Gospel message. We regularly upload full services and Bible studies.</p>
-                <a href="/youtube/" class="btn btn-outline-dark rounded-pill px-4"><i class="bi bi-youtube text-danger"></i> Visit Channel</a>
+            <div class="col-lg-6 home-yt-copy">
+                <h3 class="fw-bold" style="color: #0A2F1F;">{{ home_youtube.section_title }}</h3>
+                <p>{{ home_youtube.section_text }}</p>
+                <a href="{{ home_youtube.channel_url }}" class="btn btn-outline-dark rounded-pill px-4"><i class="bi bi-youtube text-danger"></i> {% trans "Visit Channel" %}</a>
                 <hr class="my-4">
-                <h5 class="fw-semibold"><i class="bi bi-calendar-week"></i> Book an Appointment</h5>
-                <p>Need pastoral guidance or want to discuss spiritual growth? Book a session with our team.</p>
-                <a href="/appointment/" class="btn btn-warning rounded-pill px-4">Schedule now →</a>
+                <h5 class="fw-semibold"><i class="bi bi-chat-dots"></i> {% trans "Get in Touch" %}</h5>
+                <p>{% trans "Need pastoral guidance? Send your name and WhatsApp number — the pastor will reach out to you." %}</p>
+                <a href="{% url 'get_in_touch' %}" class="btn btn-warning rounded-pill px-4">{% trans "Contact pastor →" %}</a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- additional quick access to articles & books -->
+<!-- additional quick access to YouTube & audio -->
 <section class="container my-5">
     <div class="row g-4">
         <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100 p-4 rounded-4">
-                <i class="bi bi-newspaper fs-1 text-secondary mb-3"></i>
-                <h4>Recent Articles</h4>
-                <p>Deepen your understanding of Scripture through practical articles on faith, grace, and discipleship.</p>
-                <a href="/articles/" class="fw-semibold" style="color: #D4AF37;">Browse articles →</a>
+                <i class="bi bi-youtube fs-1 text-danger mb-3"></i>
+                <h4>{% trans "YouTube Teachings" %}</h4>
+                <p>{% trans "Watch sermon videos and gospel teachings from our channel." %}</p>
+                <a href="{% url 'youtube' %}" class="fw-semibold" style="color: #D4AF37;">{% trans "Browse videos →" %}</a>
             </div>
         </div>
         <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100 p-4 rounded-4">
-                <i class="bi bi-journal-bookmark-fill fs-1 text-warning mb-3"></i>
-                <h4>Recommended Books</h4>
-                <p>Explore Christian classics and modern writings that nourish the soul.</p>
-                <a href="/books/" class="fw-semibold" style="color: #D4AF37;">See library →</a>
+                <i class="bi bi-headphones fs-1 text-warning mb-3"></i>
+                <h4>{% trans "Audio Messages" %}</h4>
+                <p>{% trans "Listen on the go with audio sermons and gospel messages." %}</p>
+                <a href="{% url 'audio' %}" class="fw-semibold" style="color: #D4AF37;">{% trans "Listen now →" %}</a>
             </div>
         </div>
     </div>

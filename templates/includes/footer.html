@@ -1,4 +1,5 @@
 <!-- footer.html -->
+{% load i18n %}
 <footer class="bg-dark text-white pt-5 pb-4 mt-5" style="border-top: 4px solid #D4AF37;">
     <div class="container">
         <div class="row gy-4">
@@ -8,58 +9,70 @@
                     <div class="me-2 bg-white bg-opacity-10 rounded p-2">
                         <i class="bi bi-crosshair fs-4" style="color: #D4AF37;"></i>
                     </div>
-                    <span class="fw-bold fs-5">Inzira y'agakiza</span>
+                    <span class="fw-bold fs-5">Inzira y'ubugingo</span>
                 </div>
-                <p class="text-white-50 small">Teaching the Gospel to the Nation with clarity and truth. We provide resources, biblical teachings, and community support to grow in faith.</p>
+                <p class="text-white-50 small">{% if site_blocks.footer_about %}{{ site_blocks.footer_about }}{% else %}{% trans "Teaching the Gospel to the Nation with clarity and truth. We provide resources, biblical teachings, and community support to grow in faith." %}{% endif %}</p>
                 <div class="mt-3">
-                    <a href="#" class="text-white-50 me-3"><i class="bi bi-facebook fs-5"></i></a>
-                    <a href="#" class="text-white-50 me-3"><i class="bi bi-youtube fs-5"></i></a>
-                    <a href="#" class="text-white-50 me-3"><i class="bi bi-instagram fs-5"></i></a>
-                    <a href="#" class="text-white-50"><i class="bi bi-whatsapp fs-5"></i></a>
+                    {% if site_blocks.social_facebook %}
+                    <a href="{{ site_blocks.social_facebook }}" class="text-white-50 me-3" aria-label="Facebook"><i class="bi bi-facebook fs-5"></i></a>
+                    {% endif %}
+                    {% if site_blocks.youtube_channel_url %}
+                    <a href="{{ site_blocks.youtube_channel_url }}" class="text-white-50 me-3" aria-label="YouTube"><i class="bi bi-youtube fs-5"></i></a>
+                    {% endif %}
+                    {% if site_blocks.social_instagram %}
+                    <a href="{{ site_blocks.social_instagram }}" class="text-white-50 me-3" aria-label="Instagram"><i class="bi bi-instagram fs-5"></i></a>
+                    {% endif %}
+                    {% if site_blocks.social_whatsapp %}
+                    <a href="{{ site_blocks.social_whatsapp }}" class="text-white-50" aria-label="WhatsApp"><i class="bi bi-whatsapp fs-5"></i></a>
+                    {% endif %}
                 </div>
             </div>
 
             <!-- Quick Links -->
             <div class="col-lg-2 col-md-6">
-                <h6 class="text-uppercase fw-semibold mb-3" style="color: #D4AF37;">Explore</h6>
+                <h6 class="text-uppercase fw-semibold mb-3" style="color: #D4AF37;">{% trans "Explore" %}</h6>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="/videos/" class="text-white-50 text-decoration-none small">Video</a></li>
-                    <li class="mb-2"><a href="/audio/" class="text-white-50 text-decoration-none small">Audio</a></li>
-                    <li class="mb-2"><a href="/gallery/" class="text-white-50 text-decoration-none small">Gallery</a></li>
-                    <li class="mb-2"><a href="/books/" class="text-white-50 text-decoration-none small">Books</a></li>
-                    <li class="mb-2"><a href="/articles/" class="text-white-50 text-decoration-none small">Articles</a></li>
+                    <li class="mb-2"><a href="{% url 'youtube' %}" class="text-white-50 text-decoration-none small">{% trans "YouTube" %}</a></li>
+                    <li class="mb-2"><a href="{% url 'audio' %}" class="text-white-50 text-decoration-none small">{% trans "Audio" %}</a></li>
                 </ul>
             </div>
             <div class="col-lg-2 col-md-6">
-                <h6 class="text-uppercase fw-semibold mb-3" style="color: #D4AF37;">Resources</h6>
+                <h6 class="text-uppercase fw-semibold mb-3" style="color: #D4AF37;">{% trans "Resources" %}</h6>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="/pdf-content/" class="text-white-50 text-decoration-none small">PDF Content</a></li>
-                    <li class="mb-2"><a href="/slides/" class="text-white-50 text-decoration-none small">Teaching Slides</a></li>
-                    <li class="mb-2"><a href="/qa/" class="text-white-50 text-decoration-none small">Q&A</a></li>
-                    <li class="mb-2"><a href="/youtube/" class="text-white-50 text-decoration-none small">YouTube</a></li>
-                    <li class="mb-2"><a href="/appointment/" class="text-white-50 text-decoration-none small">Booking</a></li>
+                    <li class="mb-2"><a href="/pdf-content/" class="text-white-50 text-decoration-none small">{% trans "PDF Content" %}</a></li>
+                    <li class="mb-2"><a href="/slides/" class="text-white-50 text-decoration-none small">{% trans "Teaching Slides" %}</a></li>
+                    <li class="mb-2"><a href="/qa/" class="text-white-50 text-decoration-none small">{% trans "Q&A" %}</a></li>
+                    <li class="mb-2"><a href="/youtube/" class="text-white-50 text-decoration-none small">{% trans "YouTube" %}</a></li>
+                    <li class="mb-2"><a href="{% url 'get_in_touch' %}" class="text-white-50 text-decoration-none small">{% trans "Get in Touch" %}</a></li>
                 </ul>
             </div>
             <div class="col-lg-4 col-md-6">
-                <h6 class="text-uppercase fw-semibold mb-3" style="color: #D4AF37;">Stay Connected</h6>
-                <p class="text-white-50 small">Get updates on new sermons, articles, and events.</p>
+                <h6 class="text-uppercase fw-semibold mb-3" style="color: #D4AF37;">{% trans "Stay Connected" %}</h6>
+                <p class="text-white-50 small">{% trans "Get updates on new sermons, teachings, and events." %}</p>
                 <form action="/subscribe/" method="post" class="d-flex gap-2">
                     {% csrf_token %}
-                    <input type="email" class="form-control form-control-sm bg-dark border-secondary text-white" placeholder="Your email address" required>
-                    <button type="submit" class="btn btn-sm" style="background-color: #D4AF37; color: #0A2F1F;">Subscribe</button>
+                    <input type="email" class="form-control form-control-sm bg-dark border-secondary text-white" placeholder="{% trans 'Your email address' %}" required>
+                    <button type="submit" class="btn btn-sm" style="background-color: #D4AF37; color: #0A2F1F;">{% trans "Subscribe" %}</button>
                 </form>
-                <p class="mt-3 small text-white-50"><i class="bi bi-envelope me-1"></i> hello@inziraagakiza.rw</p>
-                <p class="small text-white-50"><i class="bi bi-telephone me-1"></i> +250 788 123 456</p>
+                {% if site_blocks.contact_email %}
+                <p class="mt-3 small text-white-50"><i class="bi bi-envelope me-1"></i> {{ site_blocks.contact_email }}</p>
+                {% endif %}
+                {% if site_blocks.contact_phone %}
+                <p class="small text-white-50"><i class="bi bi-telephone me-1"></i> {{ site_blocks.contact_phone }}</p>
+                {% endif %}
+                {% if site_blocks.contact_address %}
+                <p class="small text-white-50"><i class="bi bi-geo-alt me-1"></i> {{ site_blocks.contact_address }}</p>
+                {% endif %}
             </div>
         </div>
         <hr class="mt-4 opacity-25">
         <div class="row">
             <div class="col-md-6 text-center text-md-start small text-white-50">
-                &copy; {% now "Y" %} Inzira y'agakiza. All rights reserved. Teaching Gospel to the Nation.
+                &copy; {% now "Y" %} Inzira y'ubugingo. {% trans "All rights reserved." %} {% trans "Teaching Gospel to the Nation." %}
             </div>
             <div class="col-md-6 text-center text-md-end small">
-                <a href="#" class="text-white-50 me-3">Privacy Policy</a>
-                <a href="#" class="text-white-50">Terms of Use</a>
+                <a href="#" class="text-white-50 me-3">{% trans "Privacy Policy" %}</a>
+                <a href="#" class="text-white-50">{% trans "Terms of Use" %}</a>
             </div>
         </div>
     </div>

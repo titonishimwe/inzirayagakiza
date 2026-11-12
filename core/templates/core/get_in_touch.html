@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}{% trans "Get in Touch" %} | Inzira y'ubugingo{% endblock %}
+
+{% block content %}
+
+<div class="container py-5" style="max-width: 640px;">
+
+    <h2 class="fw-bold mb-2" style="color:#0A2F1F;">{% trans "Get in Touch" %}</h2>
+
+    <p class="text-secondary mb-4">
+
+        {% trans "Send your message below. The pastor receives it on the website dashboard and on WhatsApp at" %}
+
+        <strong>{{ pastor_whatsapp|default:"0783558316" }}</strong>.
+
+    </p>
+
+
+
+    {% if submitted %}
+
+    <div class="alert alert-success">
+
+        {% trans "Thank you! Your message was saved. The pastor will contact you on the WhatsApp number you provided." %}
+
+    </div>
+
+    <p class="small text-secondary mb-3">
+
+        {% trans "You can also send the same message to the pastor on WhatsApp now (optional):" %}
+
+    </p>
+
+    {% if pastor_notify_url %}
+
+    <a href="{{ pastor_notify_url }}" class="btn btn-success rounded-pill">
+
+        <i class="bi bi-whatsapp"></i>
+
+        {% blocktrans with phone=pastor_whatsapp %}Send to pastor on WhatsApp ({{ phone }}){% endblocktrans %}
+
+    </a>
+
+    {% endif %}
+
+    {% else %}
+
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+
+        <form method="post" novalidate>
+
+            {% csrf_token %}
+
+            {% for field in form %}
+
+            <div class="mb-3">
+
+                <label class="form-label" for="{{ field.id_for_label }}">
+
+                    {{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}
+
+                </label>
+
+                {{ field }}
+
+                {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+
+                {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+
+            </div>
+
+            {% endfor %}
+
+            <p class="small text-secondary mb-3">
+
+                <i class="bi bi-whatsapp text-success"></i>
+
+                {% trans "Use a WhatsApp number you check — the pastor will reply there." %}
+
+            </p>
+
+            <button type="submit" class="btn rounded-pill px-4" style="background:#D4AF37;color:#0A2F1F;font-weight:600;">
+
+                <i class="bi bi-send me-1"></i> {% trans "Send message" %}
+
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+

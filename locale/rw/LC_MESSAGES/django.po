@@ -1,0 +1,498 @@
+# Kinyarwanda translations for Inzira y'ubugingo
+msgid ""
+msgstr ""
+"Project-Id-Version: inziray-ubugingo\n"
+"Language: rw\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Inzira y'ubugingo - Teaching Gospel to the Nation"
+msgstr "Inzira y'ubugingo - Gusaba Evangile ku gihugu"
+
+msgid "Teaching Gospel to the Nation"
+msgstr "Gusaba Evangile ku gihugu"
+
+msgid "Language"
+msgstr "Ururimi"
+
+msgid "Select language"
+msgstr "Hitamo ururimi"
+
+msgid "Toggle navigation"
+msgstr "Fungura/funga menu"
+
+msgid "Home"
+msgstr "Ahabanza"
+
+msgid "Media"
+msgstr "Itangazamakuru"
+
+msgid "YouTube Videos"
+msgstr "Amashusho ya YouTube"
+
+msgid "Audio"
+msgstr "Amajwi"
+
+msgid "Resources"
+msgstr "Ibikoresho"
+
+msgid "PDF Content"
+msgstr "Inyandiko za PDF"
+
+msgid "Teaching Slides"
+msgstr "Imbonerahamwe y'amashuri"
+
+msgid "Q&A"
+msgstr "Ibibazo n'Ibisubizo"
+
+msgid "Get in Touch"
+msgstr "Twandikire"
+
+msgid "Search..."
+msgstr "Shakisha..."
+
+msgid "Search"
+msgstr "Shakisha"
+
+msgid "Dashboard"
+msgstr "Ikibaho"
+
+msgid "Staff login"
+msgstr "Kwinjira kw'abakozi"
+
+msgid "Search resources..."
+msgstr "Shakisha ibikoresho..."
+
+msgid "Go"
+msgstr "Genda"
+
+msgid "Teaching the Gospel to the Nation with clarity and truth. We provide resources, biblical teachings, and community support to grow in faith."
+msgstr "Gusaba Evangile ku gihugu mu mucyo no mu ukuri. Dutanga ibikoresho, inyigisho z'ibyanditswe n'ubufasha bwo gukura mu kwemera."
+
+msgid "Explore"
+msgstr "Shakisha"
+
+msgid "YouTube"
+msgstr "YouTube"
+
+msgid "Stay Connected"
+msgstr "Guma mu mubano"
+
+msgid "Get updates on new sermons, teachings, and events."
+msgstr "Akira amakuru ku mvugo nshya, inyigisho n'ibirori."
+
+msgid "Your email address"
+msgstr "Aderesi yawe ya email"
+
+msgid "Subscribe"
+msgstr "Iyandikishe"
+
+msgid "All rights reserved."
+msgstr "Uburenganzira bwose burabitswe."
+
+msgid "Teaching Gospel to the Nation."
+msgstr "Gusaba Evangile ku gihugu."
+
+msgid "Privacy Policy"
+msgstr "Politiki y'ibanga"
+
+msgid "Terms of Use"
+msgstr "Amategeko yo gukoresha"
+
+msgid "Watch Sermons"
+msgstr "Reba imvugo"
+
+msgid "Listen to Audio"
+msgstr "Umva amajwi"
+
+msgid "Sermons"
+msgstr "Imvugo"
+
+msgid "PDFs"
+msgstr "PDF"
+
+msgid "Our Resources"
+msgstr "Ibikoresho byacu"
+
+msgid "Faith-building media & teachings"
+msgstr "Itangazamakuru n'inyigisho zubaka kwemera"
+
+msgid "Explore all formats to grow in grace and knowledge"
+msgstr "Shakisha uburyo bwose bwo gukura mu ubuntu no mu bumenyi"
+
+msgid "Sermons, teachings, and worship moments."
+msgstr "Imvugo, inyigisho n'ibihe by'isengesho."
+
+msgid "Podcasts, messages, and audio devotionals."
+msgstr "Podcast, ubutumwa n'amajwi y'amasengesho."
+
+msgid "PDF & Slides"
+msgstr "PDF n'Imbonerahamwe"
+
+msgid "Study guides, notes, and teaching slides."
+msgstr "Imfashanyigisho, inyandiko n'imbonerahamwe."
+
+msgid "Q&A / Contact"
+msgstr "Ibibazo / Twandikire"
+
+msgid "Ask questions or get in touch with the pastor."
+msgstr "Baza ibibazo cyangwa uvugane n'umusaza w'itorero."
+
+msgid "Featured video coming soon"
+msgstr "Video yatoranijwe izaza vuba"
+
+msgid "Latest from YouTube"
+msgstr "Ibishya kuri YouTube"
+
+msgid "Watch our recent teachings and subscribe to stay updated with the Gospel message. We regularly upload full services and Bible studies."
+msgstr "Reba inyigisho zacu za vuba kandi wiyandikishe kugira ngo ukomeze ukurikirane ubutumwa bw'Evangile. Dushyira serivisi zuzuye n'amasomo y'ibyanditswe."
+
+msgid "Visit Channel"
+msgstr "Sura umurongo"
+
+msgid "Need pastoral guidance? Send your name and WhatsApp number — the pastor will reach out to you."
+msgstr "Ukeneye inama y'umusaza w'itorero? Ohereza izina ryawe n'inomero ya WhatsApp — umusaza azakuvugana."
+
+msgid "Contact pastor →"
+msgstr "Vugana n'umusaza →"
+
+msgid "YouTube Teachings"
+msgstr "Inyigisho za YouTube"
+
+msgid "Watch sermon videos and gospel teachings from our channel."
+msgstr "Reba amashusho y'imvugo n'inyigisho z'Evangile ku murongo wacu."
+
+msgid "Browse videos →"
+msgstr "Reba amashusho →"
+
+msgid "Audio Messages"
+msgstr "Ubutumwa bw'amajwi"
+
+msgid "Listen on the go with audio sermons and gospel messages."
+msgstr "Umva imvugo n'ubutumwa bw'Evangile uri mu nzira."
+
+msgid "Listen now →"
+msgstr "Umva ubu →"
+
+msgid "Send your details and the pastor will reach out to you. You can also open WhatsApp to send the message instantly."
+msgstr "Ohereza amakuru yawe kandi umusaza w'itorero azakuvugana. Ushobora no gufungura WhatsApp wohereze ubutumwa ako kanya."
+
+msgid "Thank you! Your message was received and added to the pastor's dashboard."
+msgstr "Murakoze! Ubutumwa bwakiriwe kandi bwashyizwe ku kibaho cy'umusaza."
+
+msgid "Open WhatsApp to notify the pastor directly:"
+msgstr "Fungura WhatsApp wamenyeshe umusaza ubutumwe:"
+
+msgid "Send via WhatsApp (%(phone)s)"
+msgstr "Ohereza kuri WhatsApp (%(phone)s)"
+
+msgid "Send message"
+msgstr "Ohereza ubutumwa"
+
+msgid "Thank you! Your message was received. The pastor will get in touch with you soon."
+msgstr "Murakoze! Ubutumwa bwakiriwe. Umusaza w'itorero azakuvugana vuba."
+
+msgid "Full names"
+msgstr "Amazina yuzuye"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "WhatsApp phone number"
+msgstr "Nomero ya WhatsApp"
+
+msgid "Your full name"
+msgstr "Izina ryawe ryuzuye"
+
+msgid "you@example.com (optional)"
+msgstr "you@example.com (si ngombwa)"
+
+msgid "e.g. 0783558316"
+msgstr "urugero: 0783558316"
+
+msgid "WhatsApp phone number is required."
+msgstr "Nomero ya WhatsApp irakenewe."
+
+msgid "Enter a valid Rwanda phone number (e.g. 0783558316)."
+msgstr "Andika nomero ya telefone y'u Rwanda yemewe (urugero: 0783558316)."
+
+msgid "Search results"
+msgstr "Ibisubizo by'ishakisha"
+
+msgid "Search results for \"%(q)s\""
+msgstr "Ibisubizo by'ishakisha kuri \"%(q)s\""
+
+msgid "No resources found."
+msgstr "Nta bikoresho byabonetse."
+
+msgid "Enter a search term in the navbar."
+msgstr "Andika ijambo ushakisha mu murongo wo hejuru."
+
+msgid "Spiritual Q&A"
+msgstr "Ibibazo n'Ibisubizo by'umwuka"
+
+msgid "Spiritual guidance"
+msgstr "Inama y'umwuka"
+
+msgid "%(n)s answered"
+msgstr "%(n)s byasubijwe"
+
+msgid "You're not alone in this journey"
+msgstr "Nturi wenyine muri uru rugendo"
+
+msgid "Life brings doubt, pain, and hard questions. Browse answers from those who walked similar paths, or ask privately — our pastor responds with Scripture, teaching videos, and resources to strengthen your walk with Christ."
+msgstr "Ubuzima buzana amakenga, ububabare n'ibibazo bikomeye. Reba ibisubizo by'abagiye mu nzira isa, cyangwa ubaze mu ibanga — umusaza wacu asubiza n'ibyanditswe, amashusho y'inyigisho n'ibikoresho bikoze imbaraga mu rugendo rwawe na Kristo."
+
+msgid "Browse answers"
+msgstr "Reba ibisubizo"
+
+msgid "Search, filter by topic, or explore how others were helped"
+msgstr "Shakisha, usuzume ku ngingo, cyangwa urebe uko abandi bafashijwe"
+
+msgid "Ask a question"
+msgstr "Baza ikibazo"
+
+msgid "Share your question"
+msgstr "Sangiza ikibazo cyawe"
+
+msgid "Confidential pastoral response. Be as honest as you need — there is no judgment here."
+msgstr "Igisubizo cy'umusaza mu ibanga. Vuga ukuri nk'uko ukeneye — nta gucira urubanza hano."
+
+msgid "Close form"
+msgstr "Funga ifishi"
+
+msgid "Submit question"
+msgstr "Ohereza ikibazo"
+
+msgid "Cancel"
+msgstr "Hagarika"
+
+msgid "Your name"
+msgstr "Izina ryawe"
+
+msgid "Topic"
+msgstr "Ingingo"
+
+msgid "Subject"
+msgstr "Inyandiko"
+
+msgid "Your question"
+msgstr "Ikibazo cyawe"
+
+msgid "Brief summary of your situation..."
+msgstr "Incamake y'ibibazo byawe..."
+
+msgid "Share what you are going through. You are not alone — we will respond with care and biblical guidance."
+msgstr "Sobanura ibyo urimo. Nturi wenyine — tuzagusubiza mu buryo bwubaha n'inama z'ibyanditswe."
+
+msgid "Choose a topic (optional)"
+msgstr "Hitamo ingingo (si ngombwa)"
+
+msgid "Thank you. Your question was received — our pastor will respond with care."
+msgstr "Murakoze. Ikibazo cyakiriwe — umusaza wacu azakusubiza mu buryo bwubaha."
+
+msgid "Search questions, answers, topics..."
+msgstr "Shakisha ibibazo, ibisubizo, ingingo..."
+
+msgid "Search Q&A"
+msgstr "Shakisha ibibazo n'ibisubizo"
+
+msgid "All topics"
+msgstr "Ingingo zose"
+
+msgid "Answer type:"
+msgstr "Ubwoko bw'igisubizo:"
+
+msgid "All formats"
+msgstr "Uburyo bwose"
+
+msgid "Text answers"
+msgstr "Ibisubizo byanditse"
+
+msgid "Video answers"
+msgstr "Ibisubizo by'amashusho"
+
+msgid "With resources"
+msgstr "Hamwe n'ibikoresho"
+
+msgid "Clear filters"
+msgstr "Kuraho amashyushyo"
+
+msgid "No results match your search."
+msgstr "Nta bisubizo bihuye n'ishakisha ryawe."
+
+msgid "Nothing found yet"
+msgstr "Nta kintu cyabonetse"
+
+msgid "Try different keywords or remove filters."
+msgstr "Gerageza amagambo atandukanye cyangwa ukureho amashyushyo."
+
+msgid "Be the first to receive guidance — ask a question above."
+msgstr "Ba wa mbere wakira inama — baza ikibazo hejuru."
+
+msgid "Ask your question"
+msgstr "Baza ikibazo cyawe"
+
+msgid "Curated covers"
+msgstr "Ifoto zatoranijwe"
+
+msgid "Sermons and Bible teachings from Inzira y'ubugingo — watch on YouTube and grow in faith."
+msgstr "Imvugo n'inyigisho z'ibyanditswe ziva kuri Inzira y'ubugingo — reba kuri YouTube ukure mu kwemera."
+
+msgid "Subscribe on YouTube"
+msgstr "Iyandikishe kuri YouTube"
+
+msgid "Audio on YouTube"
+msgstr "Amajwi kuri YouTube"
+
+msgid "Audio Messages & Podcasts"
+msgstr "Ubutumwa bw'amajwi na Podcast"
+
+msgid "Sermons, devotionals, and teachings to listen on the go. Each message links to our YouTube channel."
+msgstr "Imvogo, amasengesho n'inyigisho wumva uri mu nzira. Buri butumwa buhuza n'umurongo wacu wa YouTube."
+
+msgid "Visit YouTube channel"
+msgstr "Sura umurongo wa YouTube"
+
+msgid "No audio messages yet"
+msgstr "Nta butumwa bw'amajwi buhari"
+
+msgid "New teachings will appear here soon."
+msgstr "Inyigisho nshya zizagaragara hano vuba."
+
+msgid "New Get in Touch message (Inzira y'ubugingo)"
+msgstr "Ubutumwa bushya bwo gutwandikira (Inzira y'ubugingo)"
+
+msgid "(not provided)"
+msgstr "(ntabwo watanzwe)"
+
+msgid "Full name: %(name)s"
+msgstr "Amazina: %(name)s"
+
+msgid "WhatsApp: %(phone)s"
+msgstr "WhatsApp: %(phone)s"
+
+msgid "Email: %(email)s"
+msgstr "Email: %(email)s"
+
+msgid "Your message"
+msgstr "Ubutumwa bwawe"
+
+msgid "Write your message here — how can the pastor help you?"
+msgstr "Andika ubutumwa bwawe hano — umusaza w'itorero akugire iki?"
+
+msgid "Please enter your message."
+msgstr "Andika ubutumwa bwawe."
+
+msgid "Message: %(message)s"
+msgstr "Ubutumwa: %(message)s"
+
+msgid "(no message)"
+msgstr "(nta butumwa)"
+
+msgid "PDF Resources"
+msgstr "Inyandiko za PDF"
+
+msgid "Study guides, class handouts, and printable materials to grow in Scripture."
+msgstr "Imfashanyigisho, inyandiko z'ishuri, n'ibikoresho byo gucapa kugira ngo ukure mu Byanditswe."
+
+msgid "PDF"
+msgstr "PDF"
+
+msgid "Presentation slides and visual aids for Bible studies and teaching sessions."
+msgstr "Imbonerahamwe n'ibifashisho by'amaso ku masomo y'ibyanditswe n'amasomo."
+
+msgid "Slides"
+msgstr "Imbonerahamwe"
+
+msgid "Sermons"
+msgstr "Imvugo"
+
+msgid "Sermon recordings, notes, and related teaching resources."
+msgstr "Amarekodi y'imvogo, inyandiko, n'ibikoresho by'inyigisho bifitanye isano."
+
+msgid "Sermon"
+msgstr "Imvogo"
+
+msgid "available"
+msgstr "bihari"
+
+msgid "Pastor dashboard"
+msgstr "Ikibaho cy'umusaza"
+
+msgid "Add, edit, or remove resources — changes appear here when published."
+msgstr "Ongeraho, hindura, cyangwa ukuremo ibikoresho — impinduka zigaragara hano iyo byasohotse."
+
+msgid "Manage all"
+msgstr "Genzura byose"
+
+msgid "Featured"
+msgstr "Byatoranyijwe"
+
+msgid "No description."
+msgstr "Nta bisobanuro."
+
+msgid "Download"
+msgstr "Kuramo"
+
+msgid "Open"
+msgstr "Fungura"
+
+msgid "Web link"
+msgstr "Ihuza rya interineti"
+
+msgid "No resources yet"
+msgstr "Nta bikoresho bihari"
+
+msgid "Check back soon for new materials."
+msgstr "Subira vuba urebe ibikoresho bishya."
+
+msgid "Add the first one"
+msgstr "Ongeraho icya mbere"
+
+msgid "Support Us"
+msgstr "Dufashe"
+
+msgid "Partner with us"
+msgstr "Twifatanye natwe"
+
+msgid "Close"
+msgstr "Funga"
+
+msgid "Your generous support helps Inzira y'ubugingo share the Gospel through video teachings, audio messages, printed resources, and community outreach. Every gift makes it possible to reach more people with biblical truth."
+msgstr "Inkunga yawe ituma Inzira y'ubugingo isakaza Evangile binyuze mu mashusho, amajwi, ibikoresho byanditse, n'ubufasha ku baturage. Buri mpano ituma abantu benshi bigera ku ukuri kw'Imana."
+
+msgid "Mobile Money"
+msgstr "Mobile Money"
+
+msgid "MTN MoMo"
+msgstr "MTN MoMo"
+
+msgid "Airtel Money"
+msgstr "Airtel Money"
+
+msgid "078 — — — — —"
+msgstr "078 — — — — —"
+
+msgid "073 — — — — —"
+msgstr "073 — — — — —"
+
+msgid "Bank of Kigali (BK)"
+msgstr "Banki ya Kigali (BK)"
+
+msgid "Equity Bank"
+msgstr "Equity Bank"
+
+msgid "Account name"
+msgstr "Izina ya konti"
+
+msgid "Account number"
+msgstr "Nomero ya konti"
+
+msgid "Thank you for standing with this ministry. May God bless you abundantly."
+msgstr "Murakoze kuduhagarara. Imana ibarinde cyane."
+
+msgid "Questions? Get in Touch"
+msgstr "Ufite ibibazo? Twandikire"

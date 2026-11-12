@@ -1,0 +1,70 @@
+{% load i18n %}
+<article class="qa-card" id="qa-{{ q.pk }}">
+
+    <div class="qa-card-header">
+
+        <div class="d-flex flex-wrap align-items-start justify-content-between gap-2">
+
+            <div>
+
+                {% include "core/includes/topic_category_link.html" with category=q.category %}
+                <h3 class="qa-card-title">
+
+                    <a href="{% url 'qa_detail' q.pk %}" class="qa-card-title-link">{{ q.display_title }}</a>
+
+                </h3>
+
+            </div>
+
+            <div class="qa-answer-badges">
+
+                {% if q.is_featured %}<span class="qa-badge qa-badge-featured"><i class="bi bi-star-fill"></i> {% trans "Featured" %}</span>{% endif %}
+
+                {% if q.has_text_answer %}<span class="qa-badge qa-badge-text"><i class="bi bi-text-left"></i> {% trans "Text" %}</span>{% endif %}
+
+                {% if q.has_video_answer %}<span class="qa-badge qa-badge-video"><i class="bi bi-youtube"></i> {% trans "Video" %}</span>{% endif %}
+
+                {% if q.has_resource_answer %}<span class="qa-badge qa-badge-resource"><i class="bi bi-collection"></i> {% trans "Resources" %}</span>{% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="qa-card-question">
+
+        <span class="qa-q-mark">Q</span>
+
+        <p>{{ q.question_text|truncatewords:40 }}</p>
+
+    </div>
+
+    {% if q.has_text_answer %}
+
+    <div class="qa-answer-text mb-2">{{ q.answer_text|truncatewords:55|linebreaks }}</div>
+
+    {% endif %}
+
+    {% if q.has_video_answer and q.has_display_answer_thumbnail %}
+
+    <a href="{% url 'qa_detail' q.pk %}" class="qa-answer-video-thumb d-block mb-2" style="max-width:320px;">
+
+        {% include "core/includes/display_thumbnail_img.html" with thumb_url=q.display_answer_thumbnail_url thumb_fallback=q.display_answer_thumbnail_fallback_url uses_cdn=q.uses_youtube_cdn_answer_thumbnail alt="Video preview" %}
+
+        <span class="qa-answer-video-play" aria-hidden="true"><i class="bi bi-play-fill"></i></span>
+
+    </a>
+
+    {% endif %}
+
+    <a href="{% url 'qa_detail' q.pk %}" class="qa-read-more"><i class="bi bi-arrow-right-circle"></i> {% trans "Read full answer" %}</a>
+
+    <footer class="qa-card-footer">
+
+        <i class="bi bi-clock"></i> {% blocktrans with d=q.answered_at|date:"F j, Y" %}Answered {{ d }}{% endblocktrans %}
+
+    </footer>
+
+</article>
+

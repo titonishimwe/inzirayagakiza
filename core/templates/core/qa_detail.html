@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}{{ question.display_title }} | {% trans "Q&A" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/qa.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5 qa-page">
+    <nav class="qa-breadcrumb mb-3" aria-label="{% trans 'Breadcrumb' %}">
+        <a href="{% url 'qa' %}"><i class="bi bi-arrow-left"></i> {% trans "All Q&A" %}</a>
+        {% if question.category %}
+        <span class="text-secondary mx-2">/</span>
+        <a href="{% url 'topic_hub' question.category.slug %}">{{ question.category.name }}</a>
+        {% endif %}
+    </nav>
+
+    <div class="row g-4 qa-layout">
+        <div class="col-lg-8">
+            <article class="qa-detail-card">
+                {% include "core/includes/topic_category_link.html" with category=question.category %}
+                <h1 class="qa-detail-title">{{ question.display_title }}</h1>
+                <div class="qa-card-question mb-0">
+                    <span class="qa-q-mark">Q</span>
+                    <p>{{ question.question_text }}</p>
+                </div>
+                {% include "core/includes/qa_answer.html" with q=question %}
+                <footer class="qa-card-footer">
+                    <i class="bi bi-clock"></i>
+                    {% blocktrans with d=question.answered_at|date:"F j, Y" %}Answered {{ d }}{% endblocktrans %}
+                </footer>
+            </article>
+
+            {% if question.category %}
+            {% include "core/includes/related_by_topic.html" with category=question.category related=related %}
+            {% endif %}
+        </div>
+        <div class="col-lg-4 d-none d-lg-block">
+            <div class="qa-aside-sticky">
+                {% include "core/includes/qa_aside.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/qa-video.js' %}"></script>
+{% endblock %}

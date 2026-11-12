@@ -1,0 +1,62 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Site topics{% endblock %}
+{% block dashboard_content %}
+{% include "core/dashboard/includes/page_header.html" with title="Site topics" subtitle="One topic list for Q&A questions, YouTube videos, audio messages, PDFs, and sermons. Keep names broad and non-overlapping." action_url="/dashboard/categories/add/" action_label="Add topic" action_icon="bi-plus-lg" %}
+
+<div class="dash-panel mb-3" style="background:rgba(10,47,31,0.04);border-color:rgba(212,175,55,0.35);">
+    <p class="small mb-2 fw-semibold" style="color:#0A2F1F;"><i class="bi bi-lightbulb"></i> How to choose a topic</p>
+    <ul class="small text-secondary mb-0 ps-3">
+        <li><strong>Bible & Doctrine</strong> — expository sermons, Bible study series</li>
+        <li><strong>New Believers</strong> — gospel basics, baptism, first steps</li>
+        <li><strong>Prayer & Worship</strong> — worship nights, prayer teaching</li>
+        <li><strong>Relationships & Family</strong> — marriage, parenting, forgiveness</li>
+        <li><strong>Healing & Restoration</strong> — grief, addiction recovery, inner healing</li>
+        <li><strong>Faith & Doubt</strong> — trust, uncertainty, assurance</li>
+        <li><strong>Anxiety & Life Stress</strong> — worry, peace, daily pressure</li>
+        <li><strong>Sin & Repentance</strong> — holiness, temptation, grace</li>
+    </ul>
+</div>
+
+<div class="dash-panel">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 dash-table">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Name</th>
+                    <th>Icon</th>
+                    <th>Q&amp;A</th>
+                    <th>Media</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in categories %}
+                <tr>
+                    <td>{{ cat.sort_order }}</td>
+                    <td>
+                        <span class="fw-semibold">{{ cat.name }}</span>
+                        <div class="small text-secondary">{{ cat.description|truncatewords:18 }}</div>
+                        <div class="small"><code>{{ cat.slug }}</code></div>
+                    </td>
+                    <td><i class="bi {{ cat.icon }} fs-5"></i></td>
+                    <td>{{ cat.question_count }}</td>
+                    <td>{{ cat.resource_count }}</td>
+                    <td>
+                        {% if cat.is_active %}<span class="badge bg-success-subtle text-success border">Active</span>
+                        {% else %}<span class="badge bg-secondary-subtle">Hidden</span>{% endif %}
+                    </td>
+                    <td class="text-end text-nowrap">
+                        <a href="{% url 'dashboard_category_edit' cat.pk %}" class="btn btn-sm btn-outline-dark">Edit</a>
+                        <a href="{% url 'dashboard_category_delete' cat.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-secondary py-4">No topics yet. Run <code>python manage.py populate_categories</code> or add one.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

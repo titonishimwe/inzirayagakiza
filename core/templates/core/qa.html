@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}{% trans "Spiritual Q&A" %} | Inzira y'ubugingo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/qa.css' %}">
+<style>
+    .qa-ask-panel.is-open { animation: qaSlideDown 0.35s ease; }
+    @keyframes qaSlideDown {
+        from { opacity: 0; transform: translateY(-12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .qa-ask-panel h2 { font-size: 1.35rem; font-weight: 800; color: var(--qa-dark); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5 qa-page">
+    <header class="qa-banner">
+        <h1>{{ qa_banner_title }}</h1>
+        <p class="qa-banner-lead mb-0">{{ qa_banner_subtitle }}</p>
+    </header>
+
+    <div class="qa-stat-row">
+        <span class="qa-stat-pill"><i class="bi bi-chat-heart"></i> {% trans "Spiritual guidance" %}</span>
+        <span class="qa-stat-pill"><i class="bi bi-shield-check"></i> {% blocktrans with n=total_answered %}{{ n }} answered{% endblocktrans %}</span>
+        <span class="qa-stat-pill d-lg-none"><i class="bi bi-book"></i> {{ qa_verse_reference }}</span>
+    </div>
+
+    <div class="row g-4 qa-layout">
+        <div class="col-lg-8">
+    {% if not has_filters %}
+    {% include "core/includes/qa_top_featured.html" %}
+    {% endif %}
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+        <div>
+            <h2 class="h5 fw-bold mb-0" style="color:var(--qa-dark);">{% trans "Browse answers" %}</h2>
+            <p class="small text-secondary mb-0">{% trans "Search, filter by topic, or explore how others were helped" %}</p>
+        </div>
+        <button type="button" class="btn btn-ask-toggle" id="btnAskQuestion" aria-expanded="{{ show_ask_form|yesno:'true,false' }}" aria-controls="qaAskPanel">
+            <i class="bi bi-plus-circle me-1"></i> {% trans "Ask a question" %}
+        </button>
+    </div>
+
+    <div class="qa-ask-panel{% if show_ask_form %} is-open{% endif %}" id="qaAskPanel" role="region" aria-label="Ask a question form">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+                <h2><i class="bi bi-envelope-heart me-2" style="color:var(--qa-gold);"></i>{% trans "Share your question" %}</h2>
+                <p class="text-secondary small mb-0">{% trans "Confidential pastoral response. Be as honest as you need — there is no judgment here." %}</p>
+            </div>
+            <button type="button" class="btn-close" id="btnCloseAsk" aria-label="{% trans 'Close form' %}"></button>
+        </div>
+        <form method="post" action="{% url 'qa' %}?ask=1">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Your name</label>
+                    {{ form.asker_name }}
+                    {% for e in form.asker_name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Email</label>
+                    {{ form.asker_email }}
+                    {% for e in form.asker_email.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Topic</label>
+                    {{ form.category }}
+                    {% for e in form.category.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Subject</label>
+                    {{ form.subject }}
+                    {% for e in form.subject.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Your question</label>
+                    {{ form.question_text }}
+                    {% for e in form.question_text.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+            </div>
+            <div class="mt-4 d-flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-ask-toggle">{% trans "Submit question" %}</button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill" id="btnCancelAsk">{% trans "Cancel" %}</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="qa-toolbar">
+        <form method="get" action="{% url 'qa' %}" class="d-flex flex-wrap gap-2 align-items-center" role="search">
+            {% if active_category %}<input type="hidden" name="category" value="{{ active_category.slug }}">{% endif %}
+            {% if answer_type != 'all' %}<input type="hidden" name="type" value="{{ answer_type }}">{% endif %}
+            {% if show_featured_only %}<input type="hidden" name="featured" value="1">{% endif %}
+            <input
+                type="search"
+                name="q"
+                class="form-control qa-search-input flex-grow-1"
+                placeholder="{% trans 'Search questions, answers, topics...' %}"
+                value="{{ query }}"
+                aria-label="{% trans 'Search Q&A' %}"
+            >
+            {% if query or active_category or answer_type != 'all' or show_featured_only %}
+            <a href="{% url 'qa' %}" class="qa-clear-filters text-nowrap"><i class="bi bi-x-circle"></i> {% trans "Clear" %}</a>
+            {% endif %}
+        </form>
+        <div class="qa-categories d-lg-none mt-3" role="navigation" aria-label="Categories">
+            {% for item in categories_with_counts|slice:":6" %}
+            {% with cat=item.category %}
+            <a href="{% url 'qa' %}?category={{ cat.slug }}" class="qa-cat-btn {% if active_category and active_category.slug == cat.slug %}active{% endif %}">
+                <i class="bi {{ cat.icon }}"></i> {{ cat.name }}
+            </a>
+            {% endwith %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <p class="qa-results-meta">
+        {% if filtered_count %}
+        {% trans "Showing" %} <strong>{{ filtered_count }}</strong> {% trans "result" %}{{ filtered_count|pluralize }}
+        {% if page_obj.paginator.num_pages > 1 %}
+        ({% blocktrans with num=page_obj.number total=page_obj.paginator.num_pages %}page {{ num }} of {{ total }}{% endblocktrans %})
+        {% endif %}
+        {% if query %} {% trans "for" %} “{{ query }}”{% endif %}
+        {% if active_category %} {% trans "in" %} <strong>{{ active_category.name }}</strong>{% endif %}
+        {% if show_featured_only %} · {% trans "featured only" %}{% endif %}
+        {% elif has_filters %}
+        {% trans "No results match your filters." %}
+        {% else %}
+        {% trans "No public answers yet." %}
+        {% endif %}
+    </p>
+
+    {% if public_qa %}
+    <div class="qa-list">
+        {% for q in public_qa %}
+        {% include "core/includes/qa_question_card.html" %}
+        {% endfor %}
+    </div>
+    {% include "core/includes/pagination_nav.html" %}
+    {% else %}
+    <div class="qa-empty">
+        <i class="bi bi-search display-4 text-secondary mb-3 d-block"></i>
+        <h4 class="fw-bold" style="color:var(--qa-dark);">{% trans "Nothing found yet" %}</h4>
+        <p class="text-secondary mb-3">
+            {% if query or active_category or answer_type != 'all' %}
+            {% trans "Try different keywords or remove filters." %}
+            {% else %}
+            {% trans "Be the first to receive guidance — ask a question above." %}
+            {% endif %}
+        </p>
+        <button type="button" class="btn btn-ask-toggle btn-sm" data-open-ask>{% trans "Ask your question" %}</button>
+    </div>
+    {% endif %}
+        </div>
+        <div class="col-lg-4 d-none d-lg-block">
+            <div class="qa-aside-sticky">
+                {% include "core/includes/qa_aside.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    const panel = document.getElementById('qaAskPanel');
+    const btnOpen = document.getElementById('btnAskQuestion');
+    const btnClose = document.getElementById('btnCloseAsk');
+    const btnCancel = document.getElementById('btnCancelAsk');
+
+    function openAsk() {
+        panel.classList.add('is-open');
+        btnOpen.setAttribute('aria-expanded', 'true');
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const first = panel.querySelector('input, select, textarea');
+        if (first) setTimeout(() => first.focus(), 400);
+    }
+    function closeAsk() {
+        panel.classList.remove('is-open');
+        btnOpen.setAttribute('aria-expanded', 'false');
+    }
+    btnOpen.addEventListener('click', () => panel.classList.contains('is-open') ? closeAsk() : openAsk());
+    btnClose.addEventListener('click', closeAsk);
+    btnCancel.addEventListener('click', closeAsk);
+    document.querySelectorAll('[data-open-ask]').forEach(el => el.addEventListener('click', openAsk));
+})();
+</script>
+<script src="{% static 'js/qa-video.js' %}"></script>
+{% endblock %}

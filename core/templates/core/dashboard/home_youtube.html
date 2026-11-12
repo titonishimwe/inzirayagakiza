@@ -1,0 +1,128 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Homepage YouTube{% endblock %}
+{% block dashboard_content %}
+{% include "core/dashboard/includes/page_header.html" with title="Homepage YouTube section" subtitle="Featured video on the home page: YouTube link, auto thumbnail, or your own cover image." %}
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="dash-panel">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                <h6 class="fw-bold mb-3" style="color:#0A2F1F;"><i class="bi bi-play-btn text-danger"></i> Featured video</h6>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ form.video_url.id_for_label }}">{{ form.video_url.label }}</label>
+                    {{ form.video_url }}
+                    {% if form.video_url.help_text %}<div class="form-text">{{ form.video_url.help_text }}</div>{% endif %}
+                    {% for e in form.video_url.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ form.video_title.id_for_label }}">{{ form.video_title.label }}</label>
+                    {{ form.video_title }}
+                    {% for e in form.video_title.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ form.thumbnail.id_for_label }}">{{ form.thumbnail.label }}</label>
+                    {% if feature.thumbnail_is_custom and feature.thumbnail_url %}
+                    <div class="mb-2">
+                        <img src="{{ feature.thumbnail_url }}" alt="Current thumbnail" class="rounded-3 shadow-sm" style="max-height:140px;width:auto;object-fit:cover;">
+                        <p class="small text-secondary mb-0 mt-1">Current custom thumbnail</p>
+                    </div>
+                    {% elif preview_thumbnail_url %}
+                    <div class="mb-2">
+                        <img src="{{ preview_thumbnail_url }}" alt="YouTube thumbnail preview" class="rounded-3 shadow-sm" style="max-height:140px;width:auto;object-fit:cover;"
+                         {% if feature.thumbnail_fallback_url and feature.uses_youtube_cdn %}onerror="this.onerror=null;this.src='{{ feature.thumbnail_fallback_url }}';"{% endif %}>
+                        <p class="small text-secondary mb-0 mt-1">YouTube thumbnail (auto)</p>
+                    </div>
+                    {% endif %}
+                    {{ form.thumbnail }}
+                    {% if form.thumbnail.help_text %}<div class="form-text">{{ form.thumbnail.help_text }}</div>{% endif %}
+                    {% for e in form.thumbnail.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                {% if feature.thumbnail_is_custom %}
+                <div class="mb-4 form-check">
+                    {{ form.remove_thumbnail }}
+                    <label class="form-check-label" for="{{ form.remove_thumbnail.id_for_label }}">{{ form.remove_thumbnail.label }}</label>
+                </div>
+                {% endif %}
+
+                <hr>
+                <h6 class="fw-bold mb-3" style="color:#0A2F1F;"><i class="bi bi-text-left"></i> Section text</h6>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ form.section_title.id_for_label }}">{{ form.section_title.label }}</label>
+                    {{ form.section_title }}
+                    {% for e in form.section_title.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ form.section_text.id_for_label }}">{{ form.section_text.label }}</label>
+                    {{ form.section_text }}
+                    {% for e in form.section_text.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold" for="{{ form.channel_url.id_for_label }}">{{ form.channel_url.label }}</label>
+                    {{ form.channel_url }}
+                    {% for e in form.channel_url.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+
+                <hr>
+                <h6 class="fw-bold mb-3" style="color:#0A2F1F;"><i class="bi bi-youtube text-danger"></i> YouTube page (<code>/youtube/</code>)</h6>
+                <p class="small text-secondary">Large “Featured teaching” card at the top of the YouTube videos page.</p>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ form.youtube_page_video_url.id_for_label }}">{{ form.youtube_page_video_url.label }}</label>
+                    {{ form.youtube_page_video_url }}
+                    {% if form.youtube_page_video_url.help_text %}<div class="form-text">{{ form.youtube_page_video_url.help_text }}</div>{% endif %}
+                    {% for e in form.youtube_page_video_url.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ form.youtube_page_video_title.id_for_label }}">{{ form.youtube_page_video_title.label }}</label>
+                    {{ form.youtube_page_video_title }}
+                    {% for e in form.youtube_page_video_title.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold" for="{{ form.youtube_page_video_description.id_for_label }}">{{ form.youtube_page_video_description.label }}</label>
+                    {{ form.youtube_page_video_description }}
+                    {% for e in form.youtube_page_video_description.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-dash-primary"><i class="bi bi-check-lg"></i> Save all YouTube sections</button>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary ms-2">Preview homepage</a>
+                <a href="{% url 'youtube' %}" class="btn btn-outline-secondary ms-2">Preview /youtube/</a>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="dash-panel">
+            <h6 class="fw-bold mb-3" style="color:#0A2F1F;">Live preview</h6>
+            {% if feature.is_configured and feature.thumbnail_url %}
+            <a href="{{ feature.watch_url }}" class="d-block text-decoration-none">
+                <div class="ratio ratio-16x9 rounded-3 overflow-hidden mb-2 position-relative">
+                    <img src="{{ feature.thumbnail_url }}" alt="" class="w-100 h-100" style="object-fit:cover;"
+                         {% if feature.thumbnail_fallback_url and feature.uses_youtube_cdn %}onerror="this.onerror=null;this.src='{{ feature.thumbnail_fallback_url }}';"{% endif %}>
+                    <span class="position-absolute top-50 start-50 translate-middle rounded-circle d-flex align-items-center justify-content-center"
+                          style="width:48px;height:48px;background:#D4AF37;color:#0A2F1F;">
+                        <i class="bi bi-play-fill fs-4"></i>
+                    </span>
+                </div>
+            </a>
+            {% if feature.video_title %}<p class="fw-semibold small mb-2">{{ feature.video_title }}</p>{% endif %}
+            <p class="small text-secondary mb-0">Opens on YouTube when visitors click the image.</p>
+            {% else %}
+            <p class="text-secondary small mb-0">Add a YouTube URL above to show a thumbnail on the homepage.</p>
+            {% endif %}
+
+            {% if youtube_page_featured and youtube_page_featured.display_thumbnail_url %}
+            <hr class="my-4">
+            <h6 class="fw-bold mb-2" style="color:#0A2F1F;">/youtube/ featured card</h6>
+            <a href="{{ youtube_page_featured.watch_url }}" class="d-block text-decoration-none">
+                <img src="{{ youtube_page_featured.display_thumbnail_url }}" alt="" class="rounded-3 w-100 mb-2" style="max-height:120px;object-fit:cover;"
+                     {% if youtube_page_featured.display_thumbnail_fallback_url and youtube_page_featured.uses_youtube_cdn_thumbnail %}onerror="this.onerror=null;this.src='{{ youtube_page_featured.display_thumbnail_fallback_url }}';"{% endif %}>
+            </a>
+            <p class="fw-semibold small mb-0">{{ youtube_page_featured.title }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

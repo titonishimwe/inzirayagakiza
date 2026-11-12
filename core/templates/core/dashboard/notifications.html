@@ -1,0 +1,298 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Notifications{% endblock %}
+{% block dashboard_content %}
+<div class="dash-page-header d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="dash-page-title">Notifications</h1>
+        <p class="dash-page-subtitle text-secondary mb-0">
+            <span class="badge bg-warning text-dark me-1">{{ unread_count }} unread</span>
+            {% if has_filters %}
+            {{ filtered_count }} of {{ total_count }} shown
+            {% else %}
+            {{ total_count }} total
+            {% endif %}
+        </p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        {% if unread_count %}
+        <form method="post" action="{% url 'dashboard_notifications_mark_all_read' %}" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="btn btn-sm btn-success">
+                <i class="bi bi-check2-all"></i> Mark all read
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="dash-panel notif-filters-panel mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="h6 fw-bold mb-0" style="color:#0A2F1F;">
+            <i class="bi bi-funnel-fill"></i> Filter notifications
+        </h2>
+        {% if has_filters %}
+        <a href="{% url 'dashboard_notifications' %}" class="btn btn-sm btn-outline-secondary">Clear all</a>
+        {% endif %}
+    </div>
+    <form method="get" class="notif-filter-form">
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-4">
+                <label class="form-label small fw-semibold" for="{{ filter_form.q.id_for_label }}">{{ filter_form.q.label }}</label>
+                {{ filter_form.q }}
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <label class="form-label small fw-semibold" for="{{ filter_form.type.id_for_label }}">{{ filter_form.type.label }}</label>
+                {{ filter_form.type }}
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <label class="form-label small fw-semibold" for="{{ filter_form.status.id_for_label }}">{{ filter_form.status.label }}</label>
+                {{ filter_form.status }}
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <label class="form-label small fw-semibold" for="{{ filter_form.year.id_for_label }}">{{ filter_form.year.label }}</label>
+                {{ filter_form.year }}
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <label class="form-label small fw-semibold" for="{{ filter_form.date_from.id_for_label }}">{{ filter_form.date_from.label }}</label>
+                {{ filter_form.date_from }}
+            </div>
+            <div class="col-md-3 col-lg-2">
+                <label class="form-label small fw-semibold" for="{{ filter_form.date_to.id_for_label }}">{{ filter_form.date_to.label }}</label>
+                {{ filter_form.date_to }}
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <label class="form-label small fw-semibold" for="{{ filter_form.phone.id_for_label }}">{{ filter_form.phone.label }}</label>
+                {{ filter_form.phone }}
+            </div>
+            <div class="col-md-4 col-lg-3">
+                <label class="form-label small fw-semibold" for="{{ filter_form.email.id_for_label }}">{{ filter_form.email.label }}</label>
+                {{ filter_form.email }}
+            </div>
+            <div class="col-12 col-lg-auto d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-dash-primary">
+                    <i class="bi bi-search"></i> Apply filters
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Results -->
+{% if notifications %}
+<div class="notif-list">
+    {% for n in notifications %}
+    <article class="notif-card {% if not n.is_read %}notif-card-unread{% endif %}">
+        <div class="notif-card-main">
+            <div class="notif-card-icon notif-icon-{{ n.type_badge_class }}">
+                {% if n.notification_type == 'contact' %}<i class="bi bi-whatsapp"></i>
+                {% elif n.notification_type == 'question' %}<i class="bi bi-chat-quote-fill"></i>
+                {% elif n.notification_type == 'appointment' %}<i class="bi bi-calendar-event"></i>
+                {% else %}<i class="bi bi-bell-fill"></i>{% endif %}
+            </div>
+            <div class="notif-card-body min-width-0">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <h3 class="notif-card-title mb-0">{{ n.title }}</h3>
+                    {% if not n.is_read %}
+                    <span class="badge bg-warning text-dark">New</span>
+                    {% endif %}
+                    <span class="badge notif-type-badge notif-type-{{ n.type_badge_class }}">
+                        {% if n.notification_type == 'appointment' %}Appointment (legacy){% else %}{{ n.get_notification_type_display }}{% endif %}
+                    </span>
+                </div>
+                <div class="notif-meta-grid mb-2">
+                    <div class="notif-meta-item">
+                        <span class="notif-meta-label">Name</span>
+                        <span class="notif-meta-value">{{ n.display_name }}</span>
+                    </div>
+                    {% if n.display_phone %}
+                    <div class="notif-meta-item">
+                        <span class="notif-meta-label">Phone</span>
+                        <span class="notif-meta-value">
+                            <a href="tel:{{ n.display_phone }}" class="notif-meta-link">{{ n.display_phone }}</a>
+                        </span>
+                    </div>
+                    {% endif %}
+                    {% if n.display_email %}
+                    <div class="notif-meta-item notif-meta-item-full">
+                        <span class="notif-meta-label">Email</span>
+                        <span class="notif-meta-value">
+                            <a href="mailto:{{ n.display_email }}" class="notif-meta-link">{{ n.display_email }}</a>
+                        </span>
+                    </div>
+                    {% endif %}
+                    <div class="notif-meta-item">
+                        <span class="notif-meta-label">Received</span>
+                        <span class="notif-meta-value notif-meta-nowrap">
+                            <time datetime="{{ n.created_at|date:'c' }}">{{ n.created_at|date:"M j, Y" }}</time>
+                            <span class="text-muted">· {{ n.created_at|time:"g:i A" }}</span>
+                        </span>
+                    </div>
+                </div>
+                <p class="notif-message mb-0">{{ n.display_message_preview|truncatewords:40 }}</p>
+            </div>
+        </div>
+        <div class="notif-card-actions">
+            {% if n.link %}
+            <a href="{{ n.link }}" class="btn btn-sm btn-success rounded-pill px-3"
+               >
+                <i class="bi bi-box-arrow-up-right"></i> Open
+            </a>
+            {% endif %}
+            {% if not n.is_read %}
+            <form method="post" action="{% url 'dashboard_notification_read' n.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Dismiss</button>
+            </form>
+            {% else %}
+            <span class="badge bg-light text-secondary border">Read</span>
+            {% endif %}
+        </div>
+    </article>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-4 d-flex justify-content-center" aria-label="Notifications pagination">
+    <ul class="pagination pagination-sm mb-0">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?{% if filter_querystring %}{{ filter_querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?{% if filter_querystring %}{{ filter_querystring }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="dash-panel text-center py-5">
+    <i class="bi bi-inbox display-4 text-secondary opacity-50 d-block mb-3"></i>
+    <h2 class="h5 fw-bold" style="color:#0A2F1F;">No notifications match</h2>
+    <p class="text-secondary mb-3">Try adjusting your filters or check back later.</p>
+    {% if has_filters %}
+    <a href="{% url 'dashboard_notifications' %}" class="btn btn-outline-dark rounded-pill">Clear filters</a>
+    {% endif %}
+</div>
+{% endif %}
+
+<style>
+    .notif-filters-panel { border: 1px solid rgba(212, 175, 55, 0.25); }
+    .notif-filter-form .form-label { margin-bottom: 0.25rem; }
+    .notif-list { display: flex; flex-direction: column; gap: 1rem; }
+    .notif-card {
+        background: #fff;
+        border-radius: 1rem;
+        border: 1px solid rgba(10, 47, 31, 0.08);
+        box-shadow: 0 2px 12px rgba(10, 47, 31, 0.05);
+        padding: 1.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .notif-card-unread {
+        border-color: rgba(212, 175, 55, 0.45);
+        background: linear-gradient(135deg, rgba(212,175,55,0.06), #fff 40%);
+    }
+    .notif-card-main {
+        display: flex;
+        gap: 1rem;
+        flex: 1;
+        min-width: 0;
+    }
+    .notif-card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+    .notif-icon-contact { background: #e8f5e9; color: #2e7d32; }
+    .notif-icon-question { background: #fff8e1; color: #f57f17; }
+    .notif-icon-system { background: #e3f2fd; color: #1565c0; }
+    .notif-icon-legacy { background: #fce4ec; color: #c62828; }
+    .notif-card-title { font-size: 1.05rem; font-weight: 700; color: #0A2F1F; }
+    .notif-meta-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem 1.25rem;
+        align-items: flex-start;
+    }
+    .notif-meta-item {
+        flex: 1 1 10rem;
+        min-width: 0;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+    }
+    .notif-meta-item-full {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+    .notif-meta-label {
+        display: block;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #9ca3af;
+        line-height: 1.2;
+    }
+    .notif-meta-value {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #0A2F1F;
+        line-height: 1.35;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+    .notif-meta-value.notif-meta-nowrap {
+        white-space: nowrap;
+    }
+    .notif-meta-link {
+        color: #0A2F1F;
+        text-decoration: none;
+        word-break: break-all;
+    }
+    .notif-meta-link:hover {
+        color: #1565c0;
+        text-decoration: underline;
+    }
+    .notif-message {
+        font-size: 0.875rem;
+        color: #6b7280;
+        line-height: 1.5;
+        border-left: 3px solid rgba(10, 47, 31, 0.1);
+        padding-left: 0.75rem;
+    }
+    .notif-type-badge { font-weight: 600; font-size: 0.7rem; }
+    .notif-type-contact { background: #e8f5e9; color: #2e7d32; }
+    .notif-type-question { background: #fff8e1; color: #e65100; }
+    .notif-type-system { background: #e3f2fd; color: #1565c0; }
+    .notif-type-legacy { background: #fce4ec; color: #ad1457; }
+    .notif-card-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        flex-shrink: 0;
+        min-width: 110px;
+    }
+    @media (max-width: 767.98px) {
+        .notif-card-actions { flex-direction: row; flex-wrap: wrap; width: 100%; }
+    }
+</style>
+{% endblock %}

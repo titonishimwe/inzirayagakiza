@@ -1,0 +1,119 @@
+{% load i18n %}
+<div class="modal fade" id="supportUsModal" tabindex="-1" aria-labelledby="supportUsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg support-modal">
+            <div class="modal-header border-0 pb-0">
+                <div>
+                    <span class="support-modal-badge"><i class="bi bi-heart-fill"></i> {% trans "Partner with us" %}</span>
+                    <h2 class="modal-title fw-bold mt-2 mb-0" id="supportUsModalLabel" style="color:#0A2F1F;">{% trans "Support Us" %}</h2>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <p class="text-secondary mb-4">
+                    {% if site_blocks.support_intro %}
+                    {{ site_blocks.support_intro }}
+                    {% else %}
+                    {% blocktrans %}Your generous support helps Inzira y'ubugingo share the Gospel through video teachings, audio messages, printed resources, and community outreach. Every gift makes it possible to reach more people with biblical truth.{% endblocktrans %}
+                    {% endif %}
+                </p>
+
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <div class="support-pay-card">
+                            <div class="support-pay-icon" style="background:rgba(255,193,7,0.2);color:#b8860b;">
+                                <i class="bi bi-phone"></i>
+                            </div>
+                            <div>
+                                <h3 class="h6 fw-bold mb-2" style="color:#0A2F1F;">{% trans "Mobile Money" %}</h3>
+                                <ul class="list-unstyled small mb-0 support-pay-list">
+                                    <li>
+                                        <span class="text-secondary">{% trans "MTN MoMo" %}</span>
+                                        <strong class="d-block">{% if site_blocks.support_mtn_momo %}{{ site_blocks.support_mtn_momo }}{% else %}{% trans "078 — — — — —" %}{% endif %}</strong>
+                                    </li>
+                                    <li class="mt-2">
+                                        <span class="text-secondary">{% trans "Airtel Money" %}</span>
+                                        <strong class="d-block">{% if site_blocks.support_airtel_money %}{{ site_blocks.support_airtel_money }}{% else %}{% trans "073 — — — — —" %}{% endif %}</strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="support-pay-card h-100">
+                            <div class="support-pay-icon" style="background:rgba(10,47,31,0.1);color:#0A2F1F;">
+                                <i class="bi bi-bank2"></i>
+                            </div>
+                            <div>
+                                <h3 class="h6 fw-bold mb-2" style="color:#0A2F1F;">{% trans "Bank of Kigali (BK)" %}</h3>
+                                <p class="small text-secondary mb-1">{% trans "Account name" %}</p>
+                                <p class="fw-semibold small mb-2">{% if site_blocks.support_bk_name %}{{ site_blocks.support_bk_name }}{% else %}Inzira y'ubugingo{% endif %}</p>
+                                <p class="small text-secondary mb-1">{% trans "Account number" %}</p>
+                                <p class="fw-semibold small mb-0 font-monospace">{% if site_blocks.support_bk_number %}{{ site_blocks.support_bk_number }}{% else %}—{% endif %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="support-pay-card h-100">
+                            <div class="support-pay-icon" style="background:rgba(220,53,69,0.1);color:#c82333;">
+                                <i class="bi bi-bank"></i>
+                            </div>
+                            <div>
+                                <h3 class="h6 fw-bold mb-2" style="color:#0A2F1F;">{% trans "Equity Bank" %}</h3>
+                                <p class="small text-secondary mb-1">{% trans "Account name" %}</p>
+                                <p class="fw-semibold small mb-2">{% if site_blocks.support_equity_name %}{{ site_blocks.support_equity_name }}{% else %}Inzira y'ubugingo{% endif %}</p>
+                                <p class="small text-secondary mb-1">{% trans "Account number" %}</p>
+                                <p class="fw-semibold small mb-0 font-monospace">{% if site_blocks.support_equity_number %}{{ site_blocks.support_equity_number }}{% else %}—{% endif %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="small text-muted mt-3 mb-0">
+                    <i class="bi bi-info-circle"></i>
+                    {% trans "Thank you for standing with this ministry. May God bless you abundantly." %}
+                </p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">{% trans "Close" %}</button>
+                <a href="{% url 'get_in_touch' %}" class="btn btn-warning rounded-pill px-4 fw-semibold" style="color:#0A2F1F;">
+                    {% trans "Questions? Get in Touch" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .support-modal { border-radius: 1.25rem; overflow: hidden; }
+    .support-modal-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: rgba(212, 175, 55, 0.2);
+        color: #0A2F1F;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.35rem 0.75rem;
+        border-radius: 50px;
+    }
+    .support-pay-card {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        background: #f8faf9;
+        border: 1px solid rgba(10, 47, 31, 0.08);
+        border-radius: 1rem;
+        padding: 1.15rem 1.25rem;
+    }
+    .support-pay-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+    .support-pay-list strong { color: #0A2F1F; font-size: 1rem; letter-spacing: 0.02em; }
+</style>

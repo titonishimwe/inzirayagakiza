@@ -1,0 +1,122 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Resources{% endblock %}
+{% block dashboard_content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold mb-1" style="color:#0A2F1F;">Resources library</h2>
+        <p class="text-secondary small mb-0">
+            {% if is_admin %}Manage all videos, audio, PDFs, slides, and sermons.{% else %}Your published teachings and media.{% endif %}
+        </p>
+    </div>
+    <a href="{% url 'dashboard_resource_add' %}" class="btn rounded-pill px-4" style="background:#D4AF37;color:#0A2F1F;font-weight:700;">
+        <i class="bi bi-plus-lg"></i> Add resource
+    </a>
+</div>
+
+<div class="d-flex flex-wrap gap-2 mb-3">
+    <a href="{% url 'dashboard_resources' %}" class="btn btn-sm {% if not active_type %}btn-dark{% else %}btn-outline-secondary{% endif %} rounded-pill">All</a>
+    {% for item in type_filters %}
+    <a href="{% url 'dashboard_resources' %}?type={{ item.slug }}" class="btn btn-sm {% if active_type == item.slug %}btn-dark{% else %}btn-outline-secondary{% endif %} rounded-pill">
+        <i class="bi {{ item.icon }}"></i> {{ item.label }}
+        <span class="badge bg-light text-dark ms-1">{{ item.count }}</span>
+    </a>
+    {% endfor %}
+</div>
+
+<form method="get" class="row g-2 mb-3 align-items-end">
+    {% if active_type %}<input type="hidden" name="type" value="{{ active_type }}">{% endif %}
+    <div class="col-md-6 col-lg-4">
+        <label class="form-label small fw-semibold mb-1">Search resources</label>
+        <input type="search" name="q" class="form-control form-control-sm" placeholder="Title or description…" value="{{ search_q|default:'' }}">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-dark">Apply</button>
+    </div>
+    {% if search_q %}
+    <div class="col-auto">
+        <a href="{% url 'dashboard_resources' %}{% if active_type %}?type={{ active_type }}{% endif %}" class="btn btn-sm btn-outline-secondary">Clear</a>
+    </div>
+    {% endif %}
+</form>
+{% if filtered_count is not None %}
+<p class="small text-secondary mb-2">{{ filtered_count }} resource{{ filtered_count|pluralize }} · {% if page_obj.paginator.num_pages > 1 %}Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}{% endif %}</p>
+{% endif %}
+
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Topic</th>
+                    <th>Status</th>
+                    {% if is_admin %}<th>Author</th>{% endif %}
+                    <th>Updated</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for r in resources %}
+            <tr>
+                <td>
+                    <a href="{% url 'dashboard_resource_detail' r.pk %}" class="text-decoration-none text-dark d-flex align-items-center gap-2">
+                        {% if r.has_display_thumbnail %}
+                        {% include "core/includes/display_thumbnail_img.html" with thumb_url=r.display_thumbnail_url thumb_fallback=r.display_thumbnail_fallback_url uses_cdn=r.uses_youtube_cdn_thumbnail alt="" extra_class="rounded" extra_style="width:48px;height:32px;object-fit:cover;" %}
+                        {% else %}
+                        <span class="rounded bg-light d-flex align-items-center justify-content-center" style="width:48px;height:32px;">
+                            <i class="bi bi-file-earmark text-secondary"></i>
+                        </span>
+                        {% endif %}
+                        <span class="fw-semibold">{{ r.title|truncatechars:40 }}</span>
+                    </a>
+                </td>
+                <td><span class="badge bg-light text-dark border">{{ r.get_resource_type_display }}</span></td>
+                <td class="small">
+                    {% if r.category %}<span class="badge bg-light text-dark border"><i class="bi {{ r.category.icon }}"></i> {{ r.category.name }}</span>{% else %}<span class="text-muted">—</span>{% endif %}
+                </td>
+                <td>
+                    {% if r.is_published %}<span class="badge bg-success-subtle text-success border border-success-subtle">Live</span>{% else %}<span class="badge bg-secondary-subtle text-secondary">Draft</span>{% endif %}
+                    {% if r.is_featured %}<i class="bi bi-star-fill text-warning ms-1" title="Featured"></i>{% endif %}
+                </td>
+                {% if is_admin %}
+                <td class="small text-secondary">{{ r.created_by.username|default:"—" }}</td>
+                {% endif %}
+                <td class="small text-muted">{{ r.updated_at|date:"M j, Y" }}</td>
+                <td class="text-end">
+                    <div class="d-flex flex-wrap gap-1 justify-content-end">
+                        <a href="{% url 'dashboard_resource_detail' r.pk %}" class="btn btn-sm btn-light border rounded-pill" title="View">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                        {% if is_admin or r.created_by_id == user.id %}
+                        <a href="{% url 'dashboard_resource_edit' r.pk %}" class="btn btn-sm btn-outline-dark rounded-pill" title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form method="post" action="{% url 'dashboard_resource_toggle_publish' r.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill" title="{% if r.is_published %}Unpublish{% else %}Publish{% endif %}">
+                                <i class="bi bi-{% if r.is_published %}eye-slash{% else %}eye{% endif %}"></i>
+                            </button>
+                        </form>
+                        <a href="{% url 'dashboard_resource_delete' r.pk %}" class="btn btn-sm btn-outline-danger rounded-pill" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="{% if is_admin %}6{% else %}5{% endif %}" class="text-center py-5 text-secondary">
+                    <i class="bi bi-collection display-6 d-block mb-2 opacity-50"></i>
+                    No resources yet.
+                    <a href="{% url 'dashboard_resource_add' %}" class="d-block mt-2 fw-semibold" style="color:#0A2F1F;">Add your first resource →</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% include "core/includes/pagination_nav.html" %}
+{% endblock %}

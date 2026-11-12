@@ -1,0 +1,184 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Messages{% endblock %}
+{% block dashboard_content %}
+<div class="dash-page-header d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="dash-page-title">Messages</h1>
+        <p class="dash-page-subtitle text-secondary mb-0">
+            <span class="badge bg-warning text-dark me-1">{{ pending_count }} pending</span>
+            {% if has_filters %}{{ filtered_count }} of {{ total_count }} shown{% else %}{{ total_count }} total{% endif %}
+        </p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        {% if pending_count %}
+        <form method="post" action="{% url 'dashboard_messages_mark_pending_read' %}" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <button type="submit" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-check2-all"></i> Mark pending as read
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<div class="dash-panel inbox-filters-panel mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="h6 fw-bold mb-0" style="color:#0A2F1F;"><i class="bi bi-funnel-fill"></i> Filter messages</h2>
+        {% if has_filters %}
+        <a href="{% url 'dashboard_messages' %}" class="btn btn-sm btn-outline-secondary">Clear all</a>
+        {% endif %}
+    </div>
+    <form method="get" class="row g-3">
+        <div class="col-md-6 col-lg-3">
+            <label class="form-label small fw-semibold">{{ filter_form.q.label }}</label>
+            {{ filter_form.q }}
+        </div>
+        <div class="col-md-3 col-lg-2">
+            <label class="form-label small fw-semibold">{{ filter_form.status.label }}</label>
+            {{ filter_form.status }}
+        </div>
+        <div class="col-md-3 col-lg-2">
+            <label class="form-label small fw-semibold">{{ filter_form.year.label }}</label>
+            {{ filter_form.year }}
+        </div>
+        <div class="col-md-3 col-lg-2">
+            <label class="form-label small fw-semibold">{{ filter_form.date_from.label }}</label>
+            {{ filter_form.date_from }}
+        </div>
+        <div class="col-md-3 col-lg-2">
+            <label class="form-label small fw-semibold">{{ filter_form.date_to.label }}</label>
+            {{ filter_form.date_to }}
+        </div>
+        <div class="col-md-4 col-lg-2">
+            <label class="form-label small fw-semibold">{{ filter_form.phone.label }}</label>
+            {{ filter_form.phone }}
+        </div>
+        <div class="col-md-4 col-lg-3">
+            <label class="form-label small fw-semibold">{{ filter_form.email.label }}</label>
+            {{ filter_form.email }}
+        </div>
+        <div class="col-12 col-lg-auto d-flex align-items-end">
+            <button type="submit" class="btn btn-dash-primary"><i class="bi bi-search"></i> Apply</button>
+        </div>
+    </form>
+    <div class="d-flex flex-wrap gap-2 mt-3 pt-3 border-top">
+        <a href="{% url 'dashboard_messages' %}" class="btn btn-sm {% if not active_filters.status %}btn-dark{% else %}btn-outline-dark{% endif %}">All ({{ status_counts.all }})</a>
+        <a href="?status=pending" class="btn btn-sm {% if active_filters.status == 'pending' %}btn-warning text-dark{% else %}btn-outline-warning{% endif %}">Pending ({{ status_counts.pending }})</a>
+        <a href="?status=read" class="btn btn-sm {% if active_filters.status == 'read' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">Read ({{ status_counts.read }})</a>
+        <a href="?status=replied" class="btn btn-sm {% if active_filters.status == 'replied' %}btn-success{% else %}btn-outline-success{% endif %}">Replied ({{ status_counts.replied }})</a>
+        <a href="?status=archived" class="btn btn-sm {% if active_filters.status == 'archived' %}btn-dark{% else %}btn-outline-secondary{% endif %}">Archived ({{ status_counts.archived }})</a>
+    </div>
+</div>
+
+{% if inbox_messages %}
+<div class="inbox-list">
+    {% for c in inbox_messages %}
+    <article class="inbox-card {% if c.status == 'pending' %}inbox-card-pending{% endif %}">
+        <div class="inbox-card-main">
+            <div class="inbox-card-icon">
+                <i class="bi bi-chat-dots-fill"></i>
+            </div>
+            <div class="inbox-card-body min-width-0">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <h3 class="inbox-card-title mb-0">{{ c.full_name }}</h3>
+                    <span class="badge bg-{{ c.status_badge_class }}">{{ c.get_status_display }}</span>
+                </div>
+                <div class="inbox-meta-grid">
+                    <div class="inbox-meta-item">
+                        <span class="inbox-meta-label">WhatsApp</span>
+                        <span class="inbox-meta-value">{{ c.whatsapp_phone }}</span>
+                    </div>
+                    {% if c.email %}
+                    <div class="inbox-meta-item inbox-meta-item-full">
+                        <span class="inbox-meta-label">Email</span>
+                        <span class="inbox-meta-value"><a href="mailto:{{ c.email }}" class="inbox-meta-link">{{ c.email }}</a></span>
+                    </div>
+                    {% endif %}
+                    <div class="inbox-meta-item">
+                        <span class="inbox-meta-label">Received</span>
+                        <span class="inbox-meta-value inbox-meta-nowrap">{{ c.created_at|date:"M j, Y" }} · {{ c.created_at|time:"g:i A" }}</span>
+                    </div>
+                </div>
+                <p class="inbox-preview mb-0">{{ c.message|truncatewords:45 }}</p>
+            </div>
+        </div>
+        <div class="inbox-card-actions">
+            <a href="{{ c.reply_whatsapp_url }}" class="btn btn-sm btn-success rounded-pill" title="Reply on WhatsApp">
+                <i class="bi bi-whatsapp"></i> WhatsApp
+            </a>
+            {% if c.reply_email_url %}
+            <a href="{{ c.reply_email_url }}" class="btn btn-sm btn-outline-primary rounded-pill" title="Reply by email">
+                <i class="bi bi-envelope"></i> Email
+            </a>
+            {% endif %}
+            <a href="{% url 'dashboard_message_detail' c.pk %}" class="btn btn-sm btn-dark rounded-pill">
+                <i class="bi bi-pencil-square"></i> Manage
+            </a>
+        </div>
+    </article>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-4 d-flex justify-content-center">
+    <ul class="pagination pagination-sm mb-0">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?{% if filter_querystring %}{{ filter_querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?{% if filter_querystring %}{{ filter_querystring }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="dash-panel text-center py-5">
+    <i class="bi bi-inbox display-4 text-secondary opacity-50 d-block mb-3"></i>
+    <h2 class="h5 fw-bold" style="color:#0A2F1F;">No messages</h2>
+    <p class="text-secondary mb-0">{% if has_filters %}Try different filters.{% else %}New Get in Touch submissions will appear here.{% endif %}</p>
+</div>
+{% endif %}
+
+<style>
+    .inbox-filters-panel { border: 1px solid rgba(212, 175, 55, 0.25); }
+    .inbox-list { display: flex; flex-direction: column; gap: 1rem; }
+    .inbox-card {
+        background: #fff;
+        border-radius: 1rem;
+        border: 1px solid rgba(10, 47, 31, 0.08);
+        box-shadow: 0 2px 12px rgba(10, 47, 31, 0.05);
+        padding: 1.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .inbox-card-pending {
+        border-color: rgba(212, 175, 55, 0.45);
+        background: linear-gradient(135deg, rgba(212,175,55,0.06), #fff 45%);
+    }
+    .inbox-card-main { display: flex; gap: 1rem; flex: 1; min-width: 0; }
+    .inbox-card-icon {
+        width: 48px; height: 48px; border-radius: 12px;
+        background: #e8f5e9; color: #2e7d32;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.25rem; flex-shrink: 0;
+    }
+    .inbox-card-title { font-size: 1.05rem; font-weight: 700; color: #0A2F1F; }
+    .inbox-meta-grid { display: flex; flex-wrap: wrap; gap: 0.65rem 1.25rem; margin-bottom: 0.5rem; }
+    .inbox-meta-item { flex: 1 1 10rem; min-width: 0; display: flex; flex-direction: column; gap: 0.1rem; }
+    .inbox-meta-item-full { flex: 1 1 100%; }
+    .inbox-meta-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: #9ca3af; }
+    .inbox-meta-value { font-size: 0.875rem; font-weight: 600; color: #0A2F1F; word-break: break-word; }
+    .inbox-meta-value.inbox-meta-nowrap { white-space: nowrap; }
+    .inbox-meta-link { color: #0A2F1F; text-decoration: none; word-break: break-all; }
+    .inbox-preview { font-size: 0.875rem; color: #6b7280; border-left: 3px solid rgba(10,47,31,0.1); padding-left: 0.75rem; line-height: 1.5; }
+    .inbox-card-actions { display: flex; flex-direction: column; gap: 0.4rem; min-width: 120px; flex-shrink: 0; }
+    @media (max-width: 767.98px) {
+        .inbox-card-actions { flex-direction: row; flex-wrap: wrap; width: 100%; }
+    }
+</style>
+{% endblock %}

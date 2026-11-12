@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "YouTube Videos" %} | Inzira y'ubugingo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .yt-page { --yt-dark: #0A2F1F; --yt-gold: #D4AF37; --yt-red: #FF0000; }
+    .yt-hero {
+        background: linear-gradient(145deg, var(--yt-dark) 0%, #1a4a2f 50%, #0e3822 100%);
+        color: #fff;
+        border-radius: clamp(1rem, 3vw, 1.5rem);
+        padding: clamp(1.75rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2.5rem);
+        margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+        position: relative;
+        overflow: hidden;
+    }
+    .yt-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 80% 60% at 100% 0%, rgba(255,0,0,0.12), transparent 55%),
+                    radial-gradient(ellipse 50% 50% at 0% 100%, rgba(212,175,55,0.15), transparent 50%);
+        pointer-events: none;
+    }
+    .yt-hero-inner { position: relative; z-index: 1; }
+    .yt-hero h1 {
+        font-weight: 800;
+        font-size: clamp(1.65rem, 4.5vw, 2.5rem);
+        line-height: 1.15;
+        margin-bottom: 0.75rem;
+    }
+    .yt-hero p {
+        color: rgba(255,255,240,0.88);
+        font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+        max-width: 36rem;
+        margin-bottom: 1.25rem;
+        line-height: 1.6;
+    }
+    .yt-hero-stat {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.15);
+        padding: 0.35rem 0.9rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .btn-yt-channel {
+        background: #fff;
+        color: var(--yt-dark);
+        font-weight: 700;
+        border-radius: 50px;
+        padding: 0.65rem 1.5rem;
+        font-size: 0.9rem;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-yt-channel:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        color: var(--yt-dark);
+    }
+
+    /* Featured spotlight */
+    .yt-featured {
+        margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    }
+    .yt-featured-card {
+        display: grid;
+        grid-template-columns: 1fr;
+        background: #fff;
+        border-radius: 1.25rem;
+        overflow: hidden;
+        box-shadow: 0 8px 40px rgba(10,47,31,0.1);
+        text-decoration: none;
+        color: inherit;
+        transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .yt-featured-card:hover {
+        color: inherit;
+        transform: translateY(-3px);
+        box-shadow: 0 16px 48px rgba(10,47,31,0.14);
+    }
+    @media (min-width: 768px) {
+        .yt-featured-card { grid-template-columns: 1.2fr 1fr; }
+    }
+    .yt-featured-thumb {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        background: var(--yt-dark);
+    }
+    @media (min-width: 768px) {
+        .yt-featured-thumb { aspect-ratio: auto; min-height: 280px; }
+    }
+    .yt-featured-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .yt-featured-body {
+        padding: clamp(1.25rem, 3vw, 2rem);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .yt-badge-featured {
+        display: inline-block;
+        background: var(--yt-gold);
+        color: var(--yt-dark);
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 0.3rem 0.75rem;
+        border-radius: 50px;
+        width: fit-content;
+        margin-bottom: 0.75rem;
+    }
+
+    /* Responsive grid */
+    .yt-grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: clamp(1rem, 3vw, 1.5rem);
+    }
+    @media (min-width: 576px) {
+        .yt-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 992px) {
+        .yt-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 1400px) {
+        .yt-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .yt-card {
+        background: #fff;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 2px 16px rgba(10,47,31,0.06);
+        border: 1px solid rgba(10,47,31,0.06);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .yt-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 14px 36px rgba(10,47,31,0.12);
+    }
+    .yt-card-thumb {
+        position: relative;
+        display: block;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        background: var(--yt-dark);
+    }
+    .yt-card-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+    .yt-card:hover .yt-card-thumb img { transform: scale(1.06); }
+    .yt-card-play {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(10,47,31,0.45);
+        opacity: 0;
+        transition: opacity 0.25s;
+    }
+    .yt-card:hover .yt-card-play,
+    .yt-card:focus-within .yt-card-play { opacity: 1; }
+    .yt-card-play-btn {
+        width: clamp(48px, 12vw, 56px);
+        height: clamp(48px, 12vw, 56px);
+        border-radius: 50%;
+        background: var(--yt-red);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    }
+    .yt-card-body {
+        padding: 1rem 1.1rem 1.15rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .yt-card-title {
+        font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+        font-weight: 700;
+        color: var(--yt-dark);
+        line-height: 1.35;
+        margin: 0 0 0.4rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .yt-card-desc {
+        font-size: 0.8rem;
+        color: #6b7280;
+        line-height: 1.45;
+        flex: 1;
+        margin: 0 0 0.75rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .yt-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    .yt-card-date {
+        font-size: 0.75rem;
+        color: #9ca3af;
+    }
+    .yt-card-watch {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--yt-red);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    .yt-card-watch:hover { color: #cc0000; }
+
+    .yt-empty {
+        text-align: center;
+        padding: clamp(2rem, 8vw, 4rem) 1.5rem;
+        background: #fff;
+        border-radius: 1.25rem;
+        box-shadow: 0 4px 24px rgba(10,47,31,0.06);
+    }
+    .yt-section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--yt-dark);
+        margin-bottom: 1rem;
+    }
+    .public-filters-bar {
+        background: #fff;
+        border-radius: 1rem;
+        padding: 1rem 1.25rem;
+        box-shadow: 0 2px 12px rgba(10, 47, 31, 0.06);
+        border: 1px solid rgba(10, 47, 31, 0.08);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-3 px-sm-4 px-lg-5 py-4 py-lg-5 yt-page" style="max-width: 1400px;">
+    <header class="yt-hero">
+        <div class="yt-hero-inner">
+            <span class="yt-hero-stat"><i class="bi bi-youtube text-danger"></i> {{ video_count }} teaching{{ video_count|pluralize }}</span>
+            <span class="yt-hero-stat"><i class="bi bi-image" style="color:var(--yt-gold);"></i> {% trans "Curated covers" %}</span>
+            <h1 class="mt-2">{% trans "YouTube Videos" %}</h1>
+            <p>{% trans "Sermons and Bible teachings from Inzira y'ubugingo — watch on YouTube and grow in faith." %}</p>
+            <a href="{{ channel_url }}" class="btn-yt-channel">
+                <i class="bi bi-youtube text-danger fs-5"></i> {% trans "Subscribe on YouTube" %}
+            </a>
+        </div>
+    </header>
+
+    {% if featured_video %}
+    <section class="yt-featured" aria-label="Featured video">
+        <a href="{{ featured_video.watch_url }}" class="yt-featured-card">
+            <div class="yt-featured-thumb">
+                <img src="{{ featured_video.display_thumbnail_url }}"
+                     {% if featured_video.display_thumbnail_fallback_url and featured_video.uses_youtube_cdn_thumbnail %}
+                     onerror="this.onerror=null;this.src='{{ featured_video.display_thumbnail_fallback_url }}';"
+                     {% endif %}
+                     alt="{{ featured_video.title }}" loading="eager" width="640" height="360">
+                <div class="yt-card-play" style="opacity:1;background:rgba(10,47,31,0.35);">
+                    <span class="yt-card-play-btn"><i class="bi bi-play-fill"></i></span>
+                </div>
+            </div>
+            <div class="yt-featured-body">
+                <span class="yt-badge-featured">Featured teaching</span>
+                <h2 class="h4 fw-bold mb-2" style="color:var(--yt-dark);">{{ featured_video.title }}</h2>
+                {% if featured_video.description %}
+                <p class="text-secondary mb-3">{{ featured_video.description|truncatewords:35 }}</p>
+                {% endif %}
+                <span class="fw-bold text-danger"><i class="bi bi-youtube"></i> Watch now on YouTube</span>
+            </div>
+        </a>
+    </section>
+    {% endif %}
+
+    {% if video_count or has_filters %}
+    <h2 class="yt-section-title">{% if featured_video %}{% trans "More teachings" %}{% else %}{% trans "Teachings" %}{% endif %}</h2>
+    {% include "core/includes/public_filters_bar.html" with filter_action=request.path clear_url=request.path %}
+    {% endif %}
+
+    {% if grid_videos %}
+    <div class="yt-grid">
+        {% for video in grid_videos %}
+        <article class="yt-card">
+            <a href="{{ video.watch_url }}" class="yt-card-thumb" aria-label="Watch {{ video.title }} on YouTube">
+                <img src="{{ video.display_thumbnail_url }}"
+                     {% if video.display_thumbnail_fallback_url and video.uses_youtube_cdn_thumbnail %}
+                     onerror="this.onerror=null;this.src='{{ video.display_thumbnail_fallback_url }}';"
+                     {% endif %}
+                     alt="{{ video.title }}" loading="lazy" width="640" height="360">
+                <div class="yt-card-play" aria-hidden="true">
+                    <span class="yt-card-play-btn"><i class="bi bi-play-fill"></i></span>
+                </div>
+            </a>
+            <div class="yt-card-body">
+                {% include "core/includes/topic_badge.html" with item=video %}
+                <h3 class="yt-card-title">{{ video.title }}</h3>
+                {% if video.description %}
+                <p class="yt-card-desc">{{ video.description }}</p>
+                {% endif %}
+                <div class="yt-card-footer">
+                    <span class="yt-card-date"><i class="bi bi-calendar3"></i> {{ video.published_at|date:"M j, Y" }}</span>
+                    <a href="{{ video.watch_url }}" class="yt-card-watch">
+                        Watch <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% include "core/includes/pagination_nav.html" %}
+    {% include "core/includes/related_qa_strip.html" %}
+    {% elif has_filters %}
+    <div class="yt-empty">
+        <i class="bi bi-funnel display-4 text-secondary mb-3 d-block"></i>
+        <h2 class="h4 fw-bold" style="color:var(--yt-dark);">{% trans "No videos match your filters" %}</h2>
+        <p class="text-secondary mb-3">{% trans "Try different search terms or clear filters." %}</p>
+        <a href="{{ request.path }}" class="btn-yt-channel">{% trans "Clear filters" %}</a>
+    </div>
+    {% elif not featured_video %}
+    <div class="yt-empty">
+        <i class="bi bi-youtube display-3 text-danger mb-3 d-block"></i>
+        <h2 class="h4 fw-bold" style="color:var(--yt-dark);">Videos coming soon</h2>
+        <p class="text-secondary mb-0 mx-auto" style="max-width: 400px;">New teachings with cover images will appear here. Visit our YouTube channel in the meantime.</p>
+        <a href="{{ channel_url }}" class="btn-yt-channel mt-4">
+            <i class="bi bi-youtube text-danger"></i> Open YouTube channel
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

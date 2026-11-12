@@ -1,0 +1,48 @@
+{% load i18n %}
+<div class="qa-answer mt-3 pt-3 border-top">
+    <span class="qa-answer-label">{% trans "Answer" %}</span>
+
+    {% if q.answer_text %}
+    <div class="qa-answer-text mb-3">
+        {{ q.answer_text|linebreaks }}
+    </div>
+    {% endif %}
+
+    {% include "core/includes/qa_video_player.html" %}
+
+    {% with resources=q.recommended_resources.all %}
+    {% if resources %}
+    <div class="qa-answer-resources mt-3">
+        <p class="small fw-semibold mb-2" style="color:#0A2F1F;"><i class="bi bi-bookmark-star me-1" style="color:#D4AF37;"></i> {% trans "Recommended resources" %}</p>
+        <div class="row g-2">
+            {% for r in resources %}
+            <div class="col-sm-6">
+                <div class="card border-0 bg-light h-100">
+                    <div class="row g-0 align-items-center">
+                        {% if r.has_display_thumbnail %}
+                        <div class="col-4">
+                            {% include "core/includes/display_thumbnail_img.html" with thumb_url=r.display_thumbnail_url thumb_fallback=r.display_thumbnail_fallback_url uses_cdn=r.uses_youtube_cdn_thumbnail alt=r.title extra_class="img-fluid rounded-start" extra_style="object-fit:cover;min-height:72px;width:100%;" %}
+                        </div>
+                        <div class="col-8">
+                        {% else %}
+                        <div class="col-12">
+                        {% endif %}
+                            <div class="card-body py-2 px-3">
+                                <span class="badge bg-warning text-dark mb-1" style="font-size:0.65rem;">{{ r.get_resource_type_display }}</span>
+                                <h6 class="card-title mb-1 small fw-bold">{{ r.title|truncatechars:50 }}</h6>
+                                {% if r.watch_url %}
+                                <a href="{{ r.watch_url }}" class="small fw-semibold" style="color:#0A2F1F;">{% trans "View" %} →</a>
+                                {% elif r.file %}
+                                <a href="{{ r.file.url }}" class="small fw-semibold" style="color:#0A2F1F;">{% trans "Download" %} →</a>
+                                {% endif %}
+                            </div>
+                        {% if r.has_display_thumbnail %}</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endwith %}
+</div>

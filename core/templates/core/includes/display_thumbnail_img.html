@@ -1,0 +1,9 @@
+{# Expects: thumb_url, thumb_fallback (optional), uses_cdn (optional), alt, extra_class, extra_style #}
+{% if thumb_url %}
+<img src="{{ thumb_url }}"
+     alt="{{ alt|default:'' }}"
+     class="{{ extra_class|default:'' }}"
+     {% if extra_style %}style="{{ extra_style }}"{% endif %}
+     loading="lazy"
+     {% if thumb_fallback and uses_cdn %}onerror="this.onerror=null;this.src='{{ thumb_fallback }}';"{% endif %}>
+{% endif %}

@@ -1,0 +1,19 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Delete resource{% endblock %}
+{% block dashboard_content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+            <div class="text-danger mb-3"><i class="bi bi-exclamation-triangle display-4"></i></div>
+            <h2 class="h5 fw-bold" style="color:#0A2F1F;">Delete this resource?</h2>
+            <p class="text-secondary mb-1"><strong>{{ resource.title }}</strong></p>
+            <p class="small text-muted mb-4">This cannot be undone. Files and thumbnails will be removed.</p>
+            <form method="post" class="d-flex flex-wrap gap-2 justify-content-center">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger rounded-pill px-4">Yes, delete</button>
+                <a href="{% url 'dashboard_resources' %}" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

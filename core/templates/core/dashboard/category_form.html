@@ -1,0 +1,41 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}{{ action }} topic{% endblock %}
+{% block dashboard_content %}
+{% include "core/dashboard/includes/page_header.html" with title=action subtitle="Topics organize Q&A, videos, audio, PDFs, and sermons. Use Bootstrap Icons (e.g. bi-book)." %}
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="dash-panel">
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.name == 'description' %}
+                    <div class="form-text">Explain when to use this topic for questions <em>and</em> media uploads.</div>
+                    {% endif %}
+                    {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                {% endfor %}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-dash-primary">Save</button>
+                    <a href="{% url 'dashboard_categories' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="dash-panel" style="background:rgba(10,47,31,0.04);">
+            <h3 class="h6 fw-bold mb-2" style="color:#0A2F1F;">Topic guide</h3>
+            <p class="small text-secondary">Pick the <strong>main spiritual theme</strong>, not the format (video vs audio). One topic per item.</p>
+            <ul class="small mb-0 ps-3 text-secondary">
+                <li>Sunday expository sermon → <strong>Bible & Doctrine</strong></li>
+                <li>Gospel invitation message → <strong>New Believers</strong></li>
+                <li>Marriage conference session → <strong>Relationships & Family</strong></li>
+                <li>Overcoming anxiety → <strong>Anxiety & Life Stress</strong></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

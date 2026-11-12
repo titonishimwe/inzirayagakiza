@@ -1,0 +1,109 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Account settings{% endblock %}
+{% block dashboard_content %}
+<div class="dash-page-header mb-4">
+    <h1 class="dash-page-title">Account settings</h1>
+    <p class="dash-page-subtitle text-secondary mb-0">
+        Update your display name, login username, and password.
+        {% if is_admin %}You are signed in as an <strong>Administrator</strong>.{% else %}You are signed in as a <strong>Pastor</strong>.{% endif %}
+    </p>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="dash-panel mb-4">
+            <h2 class="h6 fw-bold mb-3" style="color:#0A2F1F;"><i class="bi bi-person"></i> Profile</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="profile">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ profile_form.first_name.label }}</label>
+                    {{ profile_form.first_name }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ profile_form.last_name.label }}</label>
+                    {{ profile_form.last_name }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ profile_form.email.label }}</label>
+                    {{ profile_form.email }}
+                </div>
+                <button type="submit" class="btn btn-dash-primary">Save profile</button>
+            </form>
+        </div>
+
+        <div class="dash-panel">
+            <h2 class="h6 fw-bold mb-3" style="color:#0A2F1F;"><i class="bi bi-person-badge"></i> Pastor details</h2>
+            <p class="small text-secondary">Optional — shown internally on the dashboard.</p>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="pastor">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ pastor_form.title.label }}</label>
+                    {{ pastor_form.title }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ pastor_form.phone.label }}</label>
+                    {{ pastor_form.phone }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ pastor_form.bio.label }}</label>
+                    {{ pastor_form.bio }}
+                </div>
+                <button type="submit" class="btn btn-dash-primary">Save details</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="dash-panel mb-4">
+            <h2 class="h6 fw-bold mb-3" style="color:#0A2F1F;"><i class="bi bi-key"></i> Login username</h2>
+            <p class="small text-secondary mb-3">Current username: <code>{{ request.user.username }}</code></p>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="username">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ username_form.username.label }}</label>
+                    {{ username_form.username }}
+                    {% if username_form.username.help_text %}<div class="form-text">{{ username_form.username.help_text }}</div>{% endif %}
+                    {% for e in username_form.username.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ username_form.current_password.label }}</label>
+                    {{ username_form.current_password }}
+                    {% if username_form.current_password.help_text %}<div class="form-text">{{ username_form.current_password.help_text }}</div>{% endif %}
+                    {% for e in username_form.current_password.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <button type="submit" class="btn btn-dash-primary">Update username</button>
+            </form>
+        </div>
+
+        <div class="dash-panel">
+            <h2 class="h6 fw-bold mb-3" style="color:#0A2F1F;"><i class="bi bi-shield-lock"></i> Password</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="password">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ password_form.current_password.label }}</label>
+                    {{ password_form.current_password }}
+                    {% for e in password_form.current_password.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ password_form.new_password1.label }}</label>
+                    {{ password_form.new_password1 }}
+                    {% for e in password_form.new_password1.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">{{ password_form.new_password2.label }}</label>
+                    {{ password_form.new_password2 }}
+                    {% for e in password_form.new_password2.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                {% if password_form.non_field_errors %}
+                <div class="alert alert-danger small">{{ password_form.non_field_errors }}</div>
+                {% endif %}
+                <button type="submit" class="btn btn-dash-primary">Change password</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,320 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Overview{% endblock %}
+
+{% block extra_dashboard_css %}
+<style>
+    .dash-welcome {
+        background: var(--dash-card);
+        border-radius: 1.25rem;
+        padding: 1.75rem 2rem;
+        border: 1px solid rgba(10,47,31,0.06);
+        box-shadow: 0 4px 20px rgba(10,47,31,0.05);
+        margin-bottom: 1.75rem;
+    }
+    .dash-welcome h1 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 800;
+        color: var(--dash-dark);
+        margin-bottom: 0.35rem;
+    }
+    .dash-welcome p { color: #6b7280; margin: 0; max-width: 520px; }
+    .dash-welcome-date {
+        font-size: 0.8rem;
+        color: #9ca3af;
+        margin-top: 1rem;
+    }
+    .dash-stat {
+        background: var(--dash-card);
+        border-radius: 1rem;
+        padding: 1.35rem 1.25rem;
+        height: 100%;
+        border: 1px solid rgba(10,47,31,0.06);
+        box-shadow: 0 4px 20px rgba(10,47,31,0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    .dash-stat:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(10,47,31,0.1);
+        color: inherit;
+    }
+    .dash-stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.35rem;
+        margin-bottom: 1rem;
+    }
+    .dash-stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1;
+        color: var(--dash-dark);
+    }
+    .dash-stat-label {
+        font-size: 0.8rem;
+        color: #6b7280;
+        font-weight: 500;
+        margin-top: 0.25rem;
+    }
+    .dash-stat-trend {
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+    .dash-quick {
+        background: var(--dash-card);
+        border-radius: 1rem;
+        padding: 1.25rem;
+        border: 1px solid rgba(10,47,31,0.06);
+        box-shadow: 0 4px 20px rgba(10,47,31,0.05);
+        margin-bottom: 1.75rem;
+    }
+    .dash-quick-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.15rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+    }
+    .dash-quick-btn-primary {
+        background: linear-gradient(105deg, var(--dash-gold), #c29e2a);
+        color: var(--dash-dark);
+    }
+    .dash-quick-btn-primary:hover { color: var(--dash-dark); transform: translateY(-1px); }
+    .dash-quick-btn-outline {
+        background: #fff;
+        border-color: #e5e7eb;
+        color: var(--dash-dark);
+    }
+    .dash-quick-btn-outline:hover { border-color: var(--dash-gold); color: var(--dash-dark); }
+    .dash-panel {
+        background: var(--dash-card);
+        border-radius: 1rem;
+        border: 1px solid rgba(10,47,31,0.06);
+        box-shadow: 0 4px 20px rgba(10,47,31,0.05);
+        overflow: hidden;
+    }
+    .dash-panel-header {
+        padding: 1.15rem 1.35rem;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .dash-panel-header h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--dash-dark);
+        margin: 0;
+    }
+    .dash-notif-item {
+        padding: 1.15rem 1.35rem;
+        border-bottom: 1px solid #f5f5f5;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        transition: background 0.15s;
+    }
+    .dash-notif-item:last-child { border-bottom: none; }
+    .dash-notif-item:hover { background: #fafafa; }
+    .dash-notif-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.1rem;
+    }
+    .dash-notif-icon.appt { background: #dcfce7; color: #16a34a; }
+    .dash-notif-icon.question { background: #fef3c7; color: #b45309; }
+    .dash-pending-item {
+        padding: 0.85rem 1.35rem;
+        border-bottom: 1px solid #f5f5f5;
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        transition: background 0.15s;
+    }
+    .dash-pending-item:hover { background: #fafafa; color: inherit; }
+    .dash-empty {
+        padding: 2.5rem;
+        text-align: center;
+        color: #9ca3af;
+    }
+    .dash-empty i { font-size: 2.5rem; opacity: 0.4; display: block; margin-bottom: 0.75rem; }
+</style>
+{% endblock %}
+
+{% block dashboard_content %}
+<header class="dash-welcome">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <h1>Welcome back, {{ user.get_full_name|default:user.username }}</h1>
+            <p>Manage teachings, answer spiritual questions, and care for those seeking guidance.</p>
+            <p class="dash-welcome-date"><i class="bi bi-calendar3 me-1"></i> {% now "l, F j, Y" %}</p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <a href="{% url 'dashboard_resource_add' %}" class="dash-quick-btn dash-quick-btn-primary">
+                <i class="bi bi-plus-lg"></i> New resource
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <a href="{% url 'dashboard_questions' %}?status=pending" class="dash-stat">
+            <div class="dash-stat-icon" style="background:#fef3c7;color:#b45309;">
+                <i class="bi bi-chat-dots-fill"></i>
+            </div>
+            <div class="dash-stat-value">{{ pending_questions }}</div>
+            <div class="dash-stat-label">Pending questions</div>
+            {% if pending_questions %}<div class="dash-stat-trend text-warning">Needs your response</div>{% endif %}
+        </a>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <a href="{% url 'dashboard_messages' %}?status=pending" class="dash-stat">
+            <div class="dash-stat-icon" style="background:#dcfce7;color:#16a34a;">
+                <i class="bi bi-chat-dots-fill"></i>
+            </div>
+            <div class="dash-stat-value">{{ pending_contacts }}</div>
+            <div class="dash-stat-label">Pending messages</div>
+            {% if message_counts.all %}<div class="dash-stat-trend text-secondary">{{ message_counts.all }} total</div>{% endif %}
+        </a>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <a href="{% url 'dashboard_resources' %}" class="dash-stat">
+            <div class="dash-stat-icon" style="background:#e0e7ff;color:#4338ca;">
+                <i class="bi bi-collection-play-fill"></i>
+            </div>
+            <div class="dash-stat-value">{{ resource_count }}</div>
+            <div class="dash-stat-label">Published resources</div>
+        </a>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <a href="{% url 'dashboard_questions' %}?status=answered" class="dash-stat">
+            <div class="dash-stat-icon" style="background:rgba(212,175,55,0.25);color:#0A2F1F;">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <div class="dash-stat-value">{{ answered_count }}</div>
+            <div class="dash-stat-label">Questions answered</div>
+        </a>
+    </div>
+</div>
+
+<div class="dash-quick mb-4">
+    <p class="small fw-bold text-secondary text-uppercase mb-3" style="letter-spacing:0.06em;">Quick actions</p>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'dashboard_resource_add' %}" class="dash-quick-btn dash-quick-btn-primary">
+            <i class="bi bi-cloud-upload"></i> Add resource
+        </a>
+        <a href="{% url 'dashboard_questions' %}" class="dash-quick-btn dash-quick-btn-outline">
+            <i class="bi bi-chat-heart"></i> View questions
+        </a>
+        <a href="{% url 'dashboard_messages' %}" class="dash-quick-btn dash-quick-btn-outline">
+            <i class="bi bi-inbox"></i> Messages
+        </a>
+        <a href="{% url 'dashboard_content_blocks' %}" class="dash-quick-btn dash-quick-btn-outline" title="Site settings">
+            <i class="bi bi-gear"></i> Site settings
+        </a>
+        <a href="{% url 'dashboard_categories' %}" class="dash-quick-btn dash-quick-btn-outline">
+            <i class="bi bi-tags"></i> Q&A categories
+        </a>
+        <a href="{% url 'qa' %}" class="dash-quick-btn dash-quick-btn-outline">
+            <i class="bi bi-eye"></i> Public site
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="dash-panel h-100">
+            <div class="dash-panel-header">
+                <h3><i class="bi bi-inbox me-2" style="color:var(--dash-gold);"></i>Recent messages</h3>
+                {% if pending_contacts %}
+                <span class="badge rounded-pill bg-warning text-dark">{{ pending_contacts }} pending</span>
+                {% endif %}
+            </div>
+            {% if recent_messages %}
+            {% for m in recent_messages %}
+            <a href="{% url 'dashboard_message_detail' m.pk %}" class="dash-notif-item text-decoration-none text-dark">
+                <div class="dash-notif-icon appt">
+                    <i class="bi bi-chat-dots-fill"></i>
+                </div>
+                <div class="flex-grow-1 min-width-0">
+                    <div class="fw-semibold">{{ m.full_name }}</div>
+                    <p class="small text-secondary mb-1">{{ m.message|truncatewords:18 }}</p>
+                    <small class="text-muted">{{ m.created_at|timesince }} ago · {{ m.get_status_display }}</small>
+                </div>
+            </a>
+            {% endfor %}
+            <div class="p-3 border-top">
+                <a href="{% url 'dashboard_messages' %}" class="small fw-semibold text-decoration-none">View all messages →</a>
+            </div>
+            {% else %}
+            <div class="dash-empty">
+                <i class="bi bi-inbox"></i>
+                <p class="mb-0">No messages yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="dash-panel h-100">
+            <div class="dash-panel-header">
+                <h3><i class="bi bi-hourglass-split me-2 text-warning"></i>Awaiting answers</h3>
+                <a href="{% url 'dashboard_questions' %}?status=pending" class="small fw-semibold text-decoration-none" style="color:var(--dash-dark);">View all →</a>
+            </div>
+            {% if unread_question_notifications %}
+            {% for n in unread_question_notifications %}
+            <a href="{{ n.get_dashboard_url }}" class="dash-notif-item text-decoration-none text-dark">
+                <div class="dash-notif-icon question">
+                    <i class="bi bi-chat-quote-fill"></i>
+                </div>
+                <div class="flex-grow-1 min-width-0">
+                    <div class="fw-semibold">{{ n.related_question.asker_name|default:n.title }}</div>
+                    <p class="small text-secondary mb-1">{{ n.display_message_preview|truncatewords:18 }}</p>
+                    <small class="text-muted">{{ n.created_at|timesince }} ago · New question</small>
+                </div>
+            </a>
+            {% endfor %}
+            {% endif %}
+            {% if recent_pending %}
+            {% for q in recent_pending %}
+            <a href="{% url 'dashboard_answer_question' q.pk %}" class="dash-pending-item">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div>
+                        {% if q.category %}<span class="badge bg-warning bg-opacity-25 text-dark mb-1" style="font-size:0.65rem;">{{ q.category.name }}</span>{% endif %}
+                        <div class="fw-semibold small" style="color:var(--dash-dark);">{{ q.subject|default:q.asker_name }}</div>
+                        <p class="small text-secondary mb-0">{{ q.question_text|truncatewords:14 }}</p>
+                    </div>
+                    <span class="btn btn-sm rounded-pill flex-shrink-0" style="background:var(--dash-gold);color:var(--dash-dark);font-size:0.7rem;font-weight:700;">Answer</span>
+                </div>
+            </a>
+            {% endfor %}
+            {% else %}
+            <div class="dash-empty">
+                <i class="bi bi-emoji-smile"></i>
+                <p class="mb-0">No pending questions right now.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

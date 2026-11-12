@@ -1,0 +1,25 @@
+{% load i18n %}
+<aside class="qa-sidebar" aria-label="{% trans 'Question index' %}">
+    <div class="qa-sidebar-inner">
+        <h2 class="qa-sidebar-title">
+            <i class="bi bi-list-ol"></i> {% trans "Browse questions" %}
+        </h2>
+        {% if sidebar_questions %}
+        <ol class="qa-sidebar-list">
+            {% for item in sidebar_questions %}
+            <li>
+                <a href="{% url 'qa_detail' item.pk %}" class="qa-sidebar-link{% if question and question.pk == item.pk %} is-active{% endif %}">
+                    <span class="qa-sidebar-num">{{ forloop.counter }}</span>
+                    <span class="qa-sidebar-text">{{ item.display_title }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ol>
+        <a href="{% url 'qa' %}" class="qa-sidebar-all small fw-semibold">
+            <i class="bi bi-grid"></i> {% trans "View all answers" %}
+        </a>
+        {% else %}
+        <p class="small text-secondary mb-0">{% trans "No public answers yet." %}</p>
+        {% endif %}
+    </div>
+</aside>

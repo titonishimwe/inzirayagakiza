@@ -1,0 +1,23 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}{% if block %}Edit{% else %}Add{% endif %} content{% endblock %}
+{% block dashboard_content %}
+{% include "core/dashboard/includes/page_header.html" with title=block|yesno:"Edit content block,Add content block" subtitle=block.label|default:"New homepage or site text block" %}
+
+<div class="dash-panel" style="max-width:640px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="mb-3">
+            <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+            {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+        </div>
+        {% endfor %}
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-dash-primary">Save</button>
+            <a href="{% url 'dashboard_content_blocks' %}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

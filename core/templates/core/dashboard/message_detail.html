@@ -1,0 +1,99 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Message — {{ contact.full_name }}{% endblock %}
+{% block dashboard_content %}
+<div class="mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+    <a href="{% url 'dashboard_messages' %}" class="text-decoration-none small fw-semibold" style="color:#0A2F1F;">
+        <i class="bi bi-arrow-left"></i> Back to messages
+    </a>
+    <div class="d-flex flex-wrap gap-2">
+        {% for value, label in status_choices %}
+        {% if value != contact.status %}
+        <form method="post" action="{% url 'dashboard_contact_status' contact.pk %}" class="d-inline">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="{{ value }}">
+            <input type="hidden" name="next" value="{% url 'dashboard_message_detail' contact.pk %}">
+            <button type="submit" class="btn btn-sm btn-outline-secondary">Mark {{ label }}</button>
+        </form>
+        {% endif %}
+        {% endfor %}
+        <a href="{% url 'dashboard_message_delete' contact.pk %}" class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-trash"></i> Delete
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="dash-panel h-100">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <h2 class="h5 fw-bold mb-0" style="color:#0A2F1F;">{{ contact.full_name }}</h2>
+                <span class="badge bg-{{ contact.status_badge_class }}">{{ contact.get_status_display }}</span>
+            </div>
+
+            <div class="message-detail-meta mb-3">
+                <div class="mb-2">
+                    <span class="small text-secondary d-block">WhatsApp</span>
+                    <strong>{{ contact.whatsapp_phone }}</strong>
+                </div>
+                {% if contact.email %}
+                <div class="mb-2">
+                    <span class="small text-secondary d-block">Email</span>
+                    <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+                </div>
+                {% endif %}
+                <div>
+                    <span class="small text-secondary d-block">Received</span>
+                    <strong>{{ contact.created_at|date:"l, M j, Y" }} at {{ contact.created_at|time:"g:i A" }}</strong>
+                </div>
+            </div>
+
+            <div class="p-3 rounded-3 mb-4 message-body-box">{{ contact.message }}</div>
+
+            <div class="d-grid gap-2">
+                <a href="{{ contact.reply_whatsapp_url }}" class="btn btn-success">
+                    <i class="bi bi-whatsapp"></i> Reply on WhatsApp
+                </a>
+                {% if contact.reply_email_url %}
+                <a href="{{ contact.reply_email_url }}" class="btn btn-outline-primary">
+                    <i class="bi bi-envelope"></i> Reply by email
+                </a>
+                {% endif %}
+                {% if pastor_whatsapp %}
+                <a href="{{ contact.pastor_notify_url }}" class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-whatsapp"></i> Forward to pastor WhatsApp ({{ pastor_whatsapp }})
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="dash-panel">
+            <h3 class="h6 fw-bold mb-3" style="color:#0A2F1F;"><i class="bi bi-gear"></i> Administration</h3>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                    {% for e in field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-dash-primary"><i class="bi bi-check-lg"></i> Save changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .message-body-box {
+        background: #f8f9fa;
+        white-space: pre-wrap;
+        line-height: 1.6;
+        max-height: 320px;
+        overflow-y: auto;
+    }
+    .message-detail-meta strong, .message-detail-meta a { color: #0A2F1F; }
+</style>
+{% endblock %}

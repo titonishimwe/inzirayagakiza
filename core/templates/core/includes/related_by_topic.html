@@ -1,0 +1,58 @@
+{% load i18n %}
+{% if category %}
+<section class="qa-related-section mt-4" aria-labelledby="relatedTopicHeading">
+    <div class="qa-related-header">
+        <h2 id="relatedTopicHeading" class="h5 fw-bold mb-1" style="color:var(--qa-dark);">
+            <i class="bi {{ category.icon }}"></i>
+            {% blocktrans with name=category.name %}More on {{ name }}{% endblocktrans %}
+        </h2>
+        <p class="small text-secondary mb-0">
+            {% trans "Answers, videos, and audio on the same topic." %}
+            <a href="{% url 'topic_hub' category.slug %}" class="fw-semibold">{% trans "View all" %} →</a>
+        </p>
+    </div>
+
+    {% if related.qa %}
+    <div class="qa-related-block mb-3">
+        <h3 class="qa-related-label"><i class="bi bi-chat-square-quote"></i> {% trans "Q&A" %}</h3>
+        <ul class="qa-related-list">
+            {% for q in related.qa %}
+            <li><a href="{% url 'qa_detail' q.pk %}">{{ q.display_title }}</a></li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'qa' %}?category={{ category.slug }}" class="small fw-semibold">{% trans "All Q&A in this topic" %} →</a>
+    </div>
+    {% endif %}
+
+    {% if related.videos %}
+    <div class="qa-related-block mb-3">
+        <h3 class="qa-related-label"><i class="bi bi-camera-reels"></i> {% trans "Videos" %}</h3>
+        <ul class="qa-related-list">
+            {% for v in related.videos %}
+            <li><a href="{{ v.watch_url }}">{{ v.title }}</a></li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'youtube' %}?category={{ category.slug }}" class="small fw-semibold">{% trans "All videos in this topic" %} →</a>
+    </div>
+    {% endif %}
+
+    {% if related.audio %}
+    <div class="qa-related-block mb-0">
+        <h3 class="qa-related-label"><i class="bi bi-headphones"></i> {% trans "Audio" %}</h3>
+        <ul class="qa-related-list">
+            {% for a in related.audio %}
+            <li><a href="{{ a.watch_url }}">{{ a.title }}</a></li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'audio' %}?category={{ category.slug }}" class="small fw-semibold">{% trans "All audio in this topic" %} →</a>
+    </div>
+    {% endif %}
+
+    {% if not related.qa and not related.videos and not related.audio %}
+    <p class="small text-secondary mb-0">
+        {% trans "No other published content in this topic yet." %}
+        <a href="{% url 'topic_hub' category.slug %}">{% trans "Browse topic" %}</a>
+    </p>
+    {% endif %}
+</section>
+{% endif %}

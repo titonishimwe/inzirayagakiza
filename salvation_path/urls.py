@@ -14,14 +14,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path
+from django.views.i18n import set_language
+
+admin.site.site_header = settings.ADMIN_SITE_HEADER
+admin.site.site_title = settings.ADMIN_SITE_TITLE
+admin.site.index_title = settings.ADMIN_INDEX_TITLE
 
 urlpatterns = [
+    path('i18n/setlang/', set_language, name='set_language'),
     path('admin/', admin.site.urls),
-    path('',include('core.urls')),
+    path('', include('core.urls')),
 ]
 
 if settings.DEBUG:

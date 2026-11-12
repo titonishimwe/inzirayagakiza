@@ -1,100 +1,1233 @@
-<!-- navbar.html -->
-{% load static %} <!-- optional if you need static files -->
-<nav class="navbar navbar-expand-lg fixed-top bg-white shadow-sm" style="border-bottom: 3px solid #D4AF37;">
+{% load static i18n %}
+
+<nav class="navbar navbar-expand-lg fixed-top bg-white shadow-sm site-navbar" aria-label="{% trans 'Main navigation' %}">
+
     <div class="container">
-        <!-- Brand / Logo -->
-        <a class="navbar-brand d-flex align-items-center" href="/">
-            <div class="me-2 d-flex align-items-center justify-content-center" style="background-color: #0A2F1F; width: 42px; height: 42px; border-radius: 12px;">
-                <i class="bi bi-crosshair text-white fs-5"></i>
-            </div>
-            <div>
-                <span class="fw-bold fs-5" style="color: #0A2F1F;">Inzira y'agakiza</span>
-                <span class="d-block small fw-light text-secondary" style="line-height: 1.2;">Teaching Gospel to the Nation</span>
-            </div>
+
+        <a class="navbar-brand site-brand" href="/">
+
+            <span class="site-brand-icon" aria-hidden="true">
+
+                <i class="bi bi-crosshair"></i>
+
+            </span>
+
+            <span class="site-brand-text">
+
+                <span class="site-brand-title">Inzira y'ubugingo</span>
+
+                <span class="site-brand-tagline">{% trans "Teaching Gospel to the Nation" %}</span>
+
+            </span>
+
         </a>
 
-        <!-- Toggler button (mobile) -->
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+
+
+        <button
+
+            class="navbar-toggler site-navbar-toggler"
+
+            type="button"
+
+            data-bs-toggle="collapse"
+
+            data-bs-target="#mainNavbar"
+
+            aria-controls="mainNavbar"
+
+            aria-expanded="false"
+
+            aria-label="{% trans 'Toggle navigation' %}"
+
+        >
+
             <span class="navbar-toggler-icon"></span>
+
         </button>
 
-        <!-- Navbar links & actions -->
-        <div class="collapse navbar-collapse" id="mainNavbar">
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-2">
-                <li class="nav-item">
-                    <a class="nav-link active fw-semibold" aria-current="page" href="/"><i class="bi bi-house-door me-1"></i>Home</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="mediaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-collection-play me-1"></i>Media
+
+
+        <div class="collapse navbar-collapse site-navbar-collapse" id="mainNavbar">
+
+            {# —— Desktop (lg+): original horizontal bar —— #}
+
+            <div class="site-desktop-bar d-none d-lg-flex">
+
+                <ul class="navbar-nav site-nav-links mx-lg-auto">
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="/">
+
+                            <i class="bi bi-house-door" aria-hidden="true"></i>
+
+                            <span>{% trans "Home" %}</span>
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item dropdown">
+
+                        <a class="nav-link dropdown-toggle" href="#" id="mediaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                            <i class="bi bi-collection-play" aria-hidden="true"></i>
+
+                            <span>{% trans "Media" %}</span>
+
+                        </a>
+
+                        <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="mediaDropdown">
+
+                            <li><a class="dropdown-item" href="{% url 'youtube' %}"><i class="bi bi-youtube me-2 text-danger"></i>{% trans "YouTube Videos" %}</a></li>
+
+                            <li><a class="dropdown-item" href="{% url 'audio' %}"><i class="bi bi-headphones me-2 text-success"></i>{% trans "Audio" %}</a></li>
+
+                        </ul>
+
+                    </li>
+
+                    <li class="nav-item dropdown">
+
+                        <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                            <i class="bi bi-book" aria-hidden="true"></i>
+
+                            <span>{% trans "Resources" %}</span>
+
+                        </a>
+
+                        <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="resourcesDropdown">
+
+                            <li><a class="dropdown-item" href="/pdf-content/"><i class="bi bi-filetype-pdf me-2 text-danger"></i>{% trans "PDF Content" %}</a></li>
+
+                            <li><a class="dropdown-item" href="/slides/"><i class="bi bi-easel me-2 text-info"></i>{% trans "Teaching Slides" %}</a></li>
+
+                        </ul>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="/qa/">
+
+                            <i class="bi bi-question-circle" aria-hidden="true"></i>
+
+                            <span>{% trans "Q&A" %}</span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+
+
+                <div class="site-navbar-utils">
+
+                    <a class="btn btn-site-contact" href="{% url 'get_in_touch' %}">
+
+                        <i class="bi bi-chat-dots" aria-hidden="true"></i>
+
+                        <span>{% trans "Get in Touch" %}</span>
+
                     </a>
-                    <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="mediaDropdown">
-                        <li><a class="dropdown-item" href="/videos/"><i class="bi bi-camera-reels me-2 text-primary"></i>Video</a></li>
-                        <li><a class="dropdown-item" href="/audio/"><i class="bi bi-headphones me-2 text-success"></i>Audio</a></li>
-                        <li><a class="dropdown-item" href="/gallery/"><i class="bi bi-images me-2 text-warning"></i>Gallery</a></li>
-                        <li><a class="dropdown-item" href="/youtube/"><i class="bi bi-youtube me-2 text-danger"></i>YouTube Videos</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-book me-1"></i>Resources
-                    </a>
-                    <ul class="dropdown-menu border-0 shadow-sm" aria-labelledby="resourcesDropdown">
-                        <li><a class="dropdown-item" href="/pdf-content/"><i class="bi bi-filetype-pdf me-2 text-danger"></i>PDF Content</a></li>
-                        <li><a class="dropdown-item" href="/slides/"><i class="bi bi-easel me-2 text-info"></i>Teaching Slides</a></li>
-                        <li><a class="dropdown-item" href="/articles/"><i class="bi bi-newspaper me-2 text-secondary"></i>Articles</a></li>
-                        <li><a class="dropdown-item" href="/books/"><i class="bi bi-book-half me-2 text-dark"></i>Books</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/qa/"><i class="bi bi-question-circle me-1"></i>Q&A</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-sm btn-outline-warning px-3 rounded-pill ms-lg-2" style="color:#0A2F1F;" href="/appointment/"><i class="bi bi-calendar-check me-1"></i>Booking</a>
-                </li>
-            </ul>
-            
-            <!-- Right side: search & user actions -->
-            <div class="d-flex gap-2 align-items-center">
-                <form class="d-none d-md-flex" role="search" action="/search/" method="get">
-                    <div class="input-group input-group-sm">
-                        <input class="form-control form-control-sm border-secondary" type="search" placeholder="Search..." aria-label="Search" name="q">
-                        <button class="btn btn-sm" style="background-color: #D4AF37; color: #0A2F1F;" type="submit"><i class="bi bi-search"></i></button>
+
+                    <div class="site-navbar-tools">
+
+                        {% include 'includes/language_switcher.html' %}
+
+                        <form class="site-search-form" role="search" action="/search/" method="get">
+
+                            <div class="input-group input-group-sm site-search-group">
+
+                                <input
+
+                                    class="form-control"
+
+                                    type="search"
+
+                                    name="q"
+
+                                    placeholder="{% trans 'Search...' %}"
+
+                                    aria-label="{% trans 'Search' %}"
+
+                                >
+
+                                <button class="btn btn-site-search" type="submit" aria-label="{% trans 'Search' %}">
+
+                                    <i class="bi bi-search" aria-hidden="true"></i>
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                        {% if user.is_authenticated %}
+
+                        <a href="{% url 'dashboard_home' %}" class="btn btn-site-dashboard" title="{% trans 'Dashboard' %}">
+
+                            <i class="bi bi-speedometer2" aria-hidden="true"></i>
+
+                            <span class="d-none d-xl-inline">{% trans "Dashboard" %}</span>
+
+                        </a>
+
+                        {% else %}
+
+                        <a href="{% url 'dashboard_login' %}" class="btn btn-site-login" title="{% trans 'Staff login' %}" aria-label="{% trans 'Staff login' %}">
+
+                            <i class="bi bi-person" aria-hidden="true"></i>
+
+                        </a>
+
+                        {% endif %}
+
+                        <button
+
+                            type="button"
+
+                            class="btn btn-site-support"
+
+                            data-bs-toggle="modal"
+
+                            data-bs-target="#supportUsModal"
+
+                            aria-label="{% trans 'Support Us' %}"
+
+                        >
+
+                            <i class="bi bi-heart-fill" aria-hidden="true"></i>
+
+                            <span class="d-none d-xl-inline">{% trans "Support Us" %}</span>
+
+                        </button>
+
                     </div>
-                </form>
-                <a href="#" class="btn btn-sm btn-outline-dark rounded-circle p-2" style="width: 36px; height: 36px;" data-bs-toggle="tooltip" title="User">
-                    <i class="bi bi-person"></i>
-                </a>
+
+                </div>
+
             </div>
+
+
+
+            {# —— Mobile: organized panel —— #}
+
+            <div class="site-mobile-panel d-lg-none">
+
+                <p class="site-mobile-label">{% trans "Menu" %}</p>
+
+                <ul class="navbar-nav site-mobile-nav">
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="/">
+
+                            <i class="bi bi-house-door" aria-hidden="true"></i>
+
+                            <span>{% trans "Home" %}</span>
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item site-mobile-group">
+
+                        <span class="site-mobile-group-title">
+
+                            <i class="bi bi-collection-play" aria-hidden="true"></i> {% trans "Media" %}
+
+                        </span>
+
+                        <a class="site-mobile-sublink" href="{% url 'youtube' %}">
+
+                            <i class="bi bi-youtube text-danger" aria-hidden="true"></i> {% trans "YouTube Videos" %}
+
+                        </a>
+
+                        <a class="site-mobile-sublink" href="{% url 'audio' %}">
+
+                            <i class="bi bi-headphones text-success" aria-hidden="true"></i> {% trans "Audio" %}
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item site-mobile-group">
+
+                        <span class="site-mobile-group-title">
+
+                            <i class="bi bi-book" aria-hidden="true"></i> {% trans "Resources" %}
+
+                        </span>
+
+                        <a class="site-mobile-sublink" href="/pdf-content/">
+
+                            <i class="bi bi-filetype-pdf text-danger" aria-hidden="true"></i> {% trans "PDF Content" %}
+
+                        </a>
+
+                        <a class="site-mobile-sublink" href="/slides/">
+
+                            <i class="bi bi-easel text-info" aria-hidden="true"></i> {% trans "Teaching Slides" %}
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="/qa/">
+
+                            <i class="bi bi-question-circle" aria-hidden="true"></i>
+
+                            <span>{% trans "Q&A" %}</span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+
+
+                <p class="site-mobile-label">{% trans "Connect" %}</p>
+
+                <a class="btn btn-site-contact btn-site-contact-block" href="{% url 'get_in_touch' %}">
+
+                    <i class="bi bi-chat-dots" aria-hidden="true"></i>
+
+                    <span>{% trans "Get in Touch" %}</span>
+
+                </a>
+
+
+
+                <p class="site-mobile-label">{% trans "Search & settings" %}</p>
+
+                <div class="site-mobile-tools">
+
+                    <label class="site-mobile-field-label">{% trans "Language" %}</label>
+
+                    {% include 'includes/language_switcher.html' %}
+
+                    <label class="site-mobile-field-label">{% trans "Search" %}</label>
+
+                    <form class="site-search-form" role="search" action="/search/" method="get">
+
+                        <div class="input-group site-search-group">
+
+                            <input class="form-control" type="search" name="q" placeholder="{% trans 'Search teachings, PDFs…' %}" aria-label="{% trans 'Search' %}">
+
+                            <button class="btn btn-site-search" type="submit" aria-label="{% trans 'Search' %}">
+
+                                <i class="bi bi-search" aria-hidden="true"></i>
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                    <div class="site-mobile-actions">
+
+                        {% if user.is_authenticated %}
+
+                        <a href="{% url 'dashboard_home' %}" class="btn btn-site-dashboard">
+
+                            <i class="bi bi-speedometer2" aria-hidden="true"></i> {% trans "Dashboard" %}
+
+                        </a>
+
+                        {% else %}
+
+                        <a href="{% url 'dashboard_login' %}" class="btn btn-site-login">
+
+                            <i class="bi bi-person" aria-hidden="true"></i> {% trans "Staff login" %}
+
+                        </a>
+
+                        {% endif %}
+
+                        <button type="button" class="btn btn-site-support" data-bs-toggle="modal" data-bs-target="#supportUsModal">
+
+                            <i class="bi bi-heart-fill" aria-hidden="true"></i> {% trans "Support Us" %}
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
+
     </div>
+
 </nav>
 
-<!-- optional mobile search bar (visible under 768px) -->
-<div class="container d-md-none mt-2 px-3" style="margin-top: 10px !important;">
-    <form class="d-flex" role="search" action="/search/">
-        <input class="form-control me-2" type="search" placeholder="Search sermons, articles..." name="q">
-        <button class="btn" style="background-color: #D4AF37; color: #0A2F1F;" type="submit">Go</button>
-    </form>
-</div>
+
+
+{% include 'includes/support_modal.html' %}
+
+
+
+<style>
+
+    :root {
+
+        --nav-h: 64px;
+
+        --nav-control-h: 36px;
+
+        --nav-green: #0A2F1F;
+
+        --nav-gold: #D4AF37;
+
+        --nav-cream: #FEF9E6;
+
+    }
+
+    .site-navbar {
+
+        border-bottom: 3px solid var(--nav-gold);
+
+        min-height: var(--nav-h);
+
+        padding-top: 0.5rem;
+
+        padding-bottom: 0.5rem;
+
+    }
+
+    body { padding-top: var(--nav-h) !important; }
+
+
+
+    .site-brand {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 0.65rem;
+
+        margin-right: 0.75rem;
+
+        padding: 0;
+
+        max-width: min(100%, 220px);
+
+    }
+
+    .site-brand-icon {
+
+        width: 40px;
+
+        height: 40px;
+
+        border-radius: 10px;
+
+        background: var(--nav-green);
+
+        color: #fff;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        font-size: 1.1rem;
+
+        flex-shrink: 0;
+
+    }
+
+    .site-brand-text {
+
+        display: flex;
+
+        flex-direction: column;
+
+        min-width: 0;
+
+        line-height: 1.15;
+
+    }
+
+    .site-brand-title {
+
+        font-weight: 700;
+
+        font-size: 1.05rem;
+
+        color: var(--nav-green);
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+    }
+
+    .site-brand-tagline {
+
+        font-size: 0.7rem;
+
+        color: #6c757d;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+    }
+
+    @media (max-width: 380px) {
+
+        .site-brand-tagline { display: none; }
+
+        .site-brand { max-width: 180px; }
+
+    }
+
+
+
+    .site-navbar-toggler {
+
+        padding: 0.35rem 0.5rem;
+
+        border: 1px solid rgba(10, 47, 31, 0.15);
+
+        border-radius: 8px;
+
+    }
+
+    .site-navbar-toggler:focus {
+
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.35);
+
+    }
+
+
+
+    /* —— Desktop bar —— */
+
+    .site-desktop-bar {
+
+        align-items: center;
+
+        width: 100%;
+
+        gap: 0.5rem;
+
+    }
+
+    .site-nav-links {
+
+        align-items: center;
+
+        gap: 0.15rem;
+
+    }
+
+    .site-nav-links .nav-link {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 0.4rem;
+
+        white-space: nowrap;
+
+        font-weight: 500;
+
+        font-size: 0.9rem;
+
+        color: var(--nav-green);
+
+        padding: 0.5rem 0.75rem;
+
+        border-radius: 8px;
+
+        line-height: 1.2;
+
+    }
+
+    .site-nav-links .nav-link i {
+
+        font-size: 1rem;
+
+        flex-shrink: 0;
+
+    }
+
+    .site-nav-links .nav-link:hover,
+
+    .site-nav-links .nav-link:focus {
+
+        color: var(--nav-green);
+
+        background: rgba(212, 175, 55, 0.12);
+
+    }
+
+    .site-nav-links .nav-link.active {
+
+        font-weight: 600;
+
+        background: rgba(212, 175, 55, 0.2);
+
+    }
+
+
+
+    .site-navbar-utils {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 0.5rem;
+
+        flex-shrink: 0;
+
+        margin-left: auto;
+
+    }
+
+    .site-navbar-tools {
+
+        display: flex;
+
+        flex-wrap: nowrap;
+
+        align-items: center;
+
+        gap: 0.5rem;
+
+    }
+
+
+
+    .btn-site-contact {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 0.4rem;
+
+        height: var(--nav-control-h);
+
+        padding: 0 1rem;
+
+        font-size: 0.875rem;
+
+        font-weight: 600;
+
+        line-height: 1;
+
+        white-space: nowrap;
+
+        flex-shrink: 0;
+
+        color: var(--nav-green);
+
+        background: transparent;
+
+        border: 1.5px solid var(--nav-gold);
+
+        border-radius: 50px;
+
+    }
+
+    .btn-site-contact:hover {
+
+        background: rgba(212, 175, 55, 0.15);
+
+        color: var(--nav-green);
+
+    }
+
+
+
+    .language-switcher { margin: 0; flex-shrink: 0; }
+
+    .language-switcher .form-select {
+
+        height: var(--nav-control-h);
+
+        min-width: 7.25rem;
+
+        max-width: 9.5rem;
+
+        font-size: 0.8125rem;
+
+        font-weight: 600;
+
+        color: var(--nav-green);
+
+        border-radius: 8px;
+
+        padding-top: 0;
+
+        padding-bottom: 0;
+
+    }
+
+
+
+    .site-search-form {
+
+        flex: 0 0 auto;
+
+        width: 168px;
+
+    }
+
+    @media (min-width: 1200px) {
+
+        .site-search-form { width: 200px; }
+
+    }
+
+    /* Desktop navbar: search icon only (full field stays in mobile menu) */
+
+    @media (min-width: 992px) {
+
+        .site-navbar-tools .site-search-form {
+
+            width: auto;
+
+        }
+
+        .site-navbar-tools .site-search-group .form-control {
+
+            display: none;
+
+        }
+
+        .site-navbar-tools .btn-site-search {
+
+            border-radius: 8px;
+
+        }
+
+    }
+
+    html[lang="rw"] .site-navbar-tools .language-switcher .form-select {
+
+        min-width: 6.5rem;
+
+        max-width: 8rem;
+
+        font-size: 0.75rem;
+
+    }
+
+    html[lang="rw"] .site-navbar-tools .btn-site-dashboard,
+
+    html[lang="rw"] .site-navbar-tools .btn-site-support {
+
+        font-size: 0.75rem;
+
+        padding-left: 0.6rem;
+
+        padding-right: 0.6rem;
+
+        gap: 0.25rem;
+
+    }
+
+    .site-search-group { height: var(--nav-control-h); }
+
+    .site-search-group .form-control {
+
+        height: var(--nav-control-h);
+
+        font-size: 0.8125rem;
+
+        border-radius: 8px 0 0 8px;
+
+        padding-top: 0;
+
+        padding-bottom: 0;
+
+    }
+
+    .site-search-group .form-control:focus {
+
+        border-color: var(--nav-gold);
+
+        box-shadow: none;
+
+    }
+
+    .btn-site-search {
+
+        height: var(--nav-control-h);
+
+        width: var(--nav-control-h);
+
+        padding: 0;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        background: var(--nav-gold);
+
+        color: var(--nav-green);
+
+        border: 1px solid var(--nav-gold);
+
+        border-radius: 0 8px 8px 0;
+
+    }
+
+    .btn-site-search:hover {
+
+        background: #c29e2a;
+
+        border-color: #c29e2a;
+
+        color: var(--nav-green);
+
+    }
+
+
+
+    .btn-site-dashboard,
+
+    .btn-site-login {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 0.35rem;
+
+        height: var(--nav-control-h);
+
+        padding: 0 0.85rem;
+
+        font-size: 0.8125rem;
+
+        font-weight: 600;
+
+        line-height: 1;
+
+        white-space: nowrap;
+
+        border-radius: 50px;
+
+        flex-shrink: 0;
+
+    }
+
+    .btn-site-dashboard {
+
+        color: var(--nav-green);
+
+        border: 1px solid var(--nav-green);
+
+        background: #fff;
+
+    }
+
+    .btn-site-dashboard:hover {
+
+        background: var(--nav-green);
+
+        color: #fff;
+
+    }
+
+    .btn-site-login {
+
+        width: var(--nav-control-h);
+
+        padding: 0;
+
+        color: var(--nav-green);
+
+        border: 1px solid #ced4da;
+
+        background: #fff;
+
+    }
+
+    .btn-site-login:hover {
+
+        border-color: var(--nav-green);
+
+        background: rgba(10, 47, 31, 0.05);
+
+    }
+
+    .btn-site-support {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 0.35rem;
+
+        height: var(--nav-control-h);
+
+        padding: 0 0.9rem;
+
+        font-size: 0.8125rem;
+
+        font-weight: 700;
+
+        line-height: 1;
+
+        white-space: nowrap;
+
+        border-radius: 50px;
+
+        flex-shrink: 0;
+
+        color: var(--nav-green);
+
+        background: linear-gradient(105deg, var(--nav-gold), #c9a227);
+
+        border: 1px solid #c9a227;
+
+    }
+
+    .btn-site-support:hover {
+
+        color: var(--nav-green);
+
+        box-shadow: 0 4px 14px rgba(212, 175, 55, 0.45);
+
+    }
+
+    @media (max-width: 1199.98px) {
+
+        .btn-site-support { padding: 0 0.65rem; }
+
+    }
+
+
+
+    /* —— Mobile panel —— */
+
+    @media (max-width: 991.98px) {
+
+        .site-navbar-collapse {
+
+            margin-top: 0.75rem;
+
+            max-height: calc(100vh - var(--nav-h) - 1rem);
+
+            overflow-y: auto;
+
+        }
+
+        .site-mobile-panel {
+
+            background: linear-gradient(180deg, #fff 0%, var(--nav-cream) 100%);
+
+            border: 1px solid rgba(10, 47, 31, 0.08);
+
+            border-radius: 16px;
+
+            padding: 1rem 1rem 1.25rem;
+
+            box-shadow: 0 12px 40px rgba(10, 47, 31, 0.1);
+
+        }
+
+        .site-mobile-label {
+
+            font-size: 0.65rem;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.08em;
+
+            color: #9ca3af;
+
+            margin: 0 0 0.5rem 0.35rem;
+
+        }
+
+        .site-mobile-label:not(:first-child) {
+
+            margin-top: 1rem;
+
+            padding-top: 0.75rem;
+
+            border-top: 1px solid rgba(10, 47, 31, 0.08);
+
+        }
+
+        .site-mobile-nav .nav-link {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 0.65rem;
+
+            padding: 0.75rem 1rem;
+
+            border-radius: 12px;
+
+            font-weight: 600;
+
+            color: var(--nav-green);
+
+            background: #fff;
+
+            border: 1px solid rgba(10, 47, 31, 0.06);
+
+            margin-bottom: 0.25rem;
+
+        }
+
+        .site-mobile-nav .nav-link.active {
+
+            background: rgba(212, 175, 55, 0.18);
+
+            border-color: rgba(212, 175, 55, 0.35);
+
+        }
+
+        .site-mobile-group {
+
+            margin-bottom: 0.35rem;
+
+        }
+
+        .site-mobile-group-title {
+
+            display: block;
+
+            font-size: 0.7rem;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.06em;
+
+            color: #6b7280;
+
+            padding: 0.35rem 0.35rem 0.25rem;
+
+        }
+
+        .site-mobile-sublink {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 0.6rem;
+
+            padding: 0.65rem 1rem 0.65rem 2rem;
+
+            border-radius: 10px;
+
+            font-size: 0.925rem;
+
+            font-weight: 500;
+
+            color: var(--nav-green);
+
+            text-decoration: none;
+
+            background: rgba(255, 255, 255, 0.7);
+
+            margin-bottom: 0.2rem;
+
+        }
+
+        .site-mobile-sublink.active {
+
+            background: #fff;
+
+            border: 1px solid rgba(212, 175, 55, 0.3);
+
+        }
+
+        .btn-site-contact-block {
+
+            width: 100%;
+
+            height: 48px;
+
+            font-size: 1rem;
+
+            border-radius: 14px;
+
+            border-width: 2px;
+
+        }
+
+        .site-mobile-tools .language-switcher,
+
+        .site-mobile-tools .form-select {
+
+            width: 100%;
+
+            max-width: none;
+
+            margin-bottom: 0.75rem;
+
+        }
+
+        .site-mobile-field-label {
+
+            display: block;
+
+            font-size: 0.75rem;
+
+            font-weight: 600;
+
+            color: #6b7280;
+
+            margin-bottom: 0.35rem;
+
+        }
+
+        .site-mobile-tools .site-search-group {
+
+            height: 40px;
+
+            margin-bottom: 0.75rem;
+
+        }
+
+        .site-mobile-tools .site-search-group .form-control,
+
+        .site-mobile-tools .btn-site-search {
+
+            height: 40px;
+
+        }
+
+        .site-mobile-tools .btn-site-search { width: 52px; }
+
+        .site-mobile-actions {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 0.5rem;
+
+        }
+
+        .site-mobile-actions .btn {
+
+            height: 44px;
+
+            border-radius: 12px;
+
+            font-size: 0.8rem;
+
+            font-weight: 700;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 0.35rem;
+
+        }
+
+    }
+
+</style>
+
+
 
 <script>
-    // enable tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-    // active link highlight based on current path (simple)
-    document.addEventListener("DOMContentLoaded", function() {
-        let currentPath = window.location.pathname;
-        document.querySelectorAll('.nav-link').forEach(link => {
-            let href = link.getAttribute('href');
-            if(href && href !== '/' && currentPath.startsWith(href) && href !== '#') {
-                link.classList.add('active', 'fw-semibold');
-                if(link.classList.contains('dropdown-toggle')) return;
-            } else if(href === '/' && currentPath === '/') {
-                link.classList.add('active', 'fw-semibold');
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const currentPath = window.location.pathname;
+
+        document.querySelectorAll(".site-nav-links .nav-link, .site-mobile-nav .nav-link, .site-mobile-sublink").forEach(function (link) {
+
+            const href = link.getAttribute("href");
+
+            if (!href || href === "#") return;
+
+            if (href === "/" && currentPath === "/") {
+
+                link.classList.add("active");
+
+            } else if (href !== "/" && currentPath.startsWith(href)) {
+
+                link.classList.add("active");
+
             }
+
         });
+
+
+
+        const collapse = document.getElementById("mainNavbar");
+
+        if (collapse) {
+
+            collapse.addEventListener("shown.bs.collapse", function () {
+
+                document.body.classList.add("navbar-menu-open");
+
+            });
+
+            collapse.addEventListener("hidden.bs.collapse", function () {
+
+                document.body.classList.remove("navbar-menu-open");
+
+            });
+
+            collapse.querySelectorAll(".site-mobile-panel a, .site-mobile-panel button[data-bs-toggle='modal']").forEach(function (el) {
+
+                el.addEventListener("click", function () {
+
+                    if (window.innerWidth < 992 && typeof bootstrap !== "undefined") {
+
+                        bootstrap.Collapse.getOrCreateInstance(collapse).hide();
+
+                    }
+
+                });
+
+            });
+
+        }
+
     });
+
 </script>
+
+

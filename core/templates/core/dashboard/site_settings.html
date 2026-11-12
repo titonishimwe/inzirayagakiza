@@ -1,0 +1,235 @@
+{% extends "core/dashboard/base.html" %}
+{% block dashboard_title %}Site settings{% endblock %}
+{% block dashboard_content %}
+{% include "core/dashboard/includes/page_header.html" with title="Site settings" subtitle="Manage homepage, contact info, social links, YouTube sections, and Support Us — all in one place." %}
+
+<div class="row g-4 site-settings-layout">
+    <div class="col-lg-3">
+        <nav class="dash-panel site-settings-nav sticky-lg-top" style="top:1rem; z-index:10;">
+            <p class="small text-uppercase fw-bold text-secondary mb-3 px-1">Sections</p>
+            <ul class="nav flex-column gap-1">
+                {% for section in sections %}
+                <li class="nav-item">
+                    <a class="nav-link site-settings-nav-link" href="#{{ section.id }}">
+                        <i class="bi {{ section.icon }}"></i> {{ section.title }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            <hr class="my-3">
+            <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary w-100 mb-2">
+                <i class="bi bi-box-arrow-up-right"></i> View site
+            </a>
+            <a href="{% url 'youtube' %}" class="btn btn-sm btn-outline-secondary w-100">
+                <i class="bi bi-youtube text-danger"></i> YouTube page
+            </a>
+        </nav>
+    </div>
+
+    <div class="col-lg-9">
+        <form method="post" enctype="multipart/form-data" id="siteSettingsForm" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <strong>Could not save.</strong> Please fix the highlighted fields below and try again.
+                <ul class="mb-0 mt-2 small">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                        <li><a href="#{{ field.auto_id }}" class="alert-link">{{ field.label }}</a>: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% for section in sections %}
+            <section id="{{ section.id }}" class="dash-panel site-settings-section mb-4 scroll-mt">
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="site-settings-section-icon">
+                        <i class="bi {{ section.icon }}"></i>
+                    </div>
+                    <div>
+                        <h2 class="h5 fw-bold mb-1" style="color:#0A2F1F;">{{ section.title }}</h2>
+                        <p class="text-secondary small mb-0">{{ section.description }}</p>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    {% for field_spec in section.fields %}
+                    {% if field_spec.field %}
+                    <div class="col-12{% if field_spec.type == 'textarea' %}{% else %} col-md-6{% endif %}">
+                        <label class="form-label fw-semibold" for="{{ field_spec.field.id_for_label }}">{{ field_spec.field.label }}</label>
+                        {{ field_spec.field }}
+                        {% if field_spec.field.help_text %}<div class="form-text">{{ field_spec.field.help_text }}</div>{% endif %}
+                        {% for e in field_spec.field.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if section.show_live_stats and homepage_stats %}
+                    <div class="col-12">
+                        <div class="site-settings-live-stats">
+                            <p class="small fw-bold mb-3" style="color:#0A2F1F;">
+                                <i class="bi bi-bar-chart-fill text-warning"></i> Live homepage statistics
+                                <span class="text-secondary fw-normal">— auto-counted from published resources</span>
+                            </p>
+                            <div class="row g-2 text-center">
+                                <div class="col-4">
+                                    <div class="live-stat-pill">
+                                        <span class="live-stat-value">{{ homepage_stats.stat_sermons }}</span>
+                                        <span class="live-stat-label">Sermons</span>
+                                        <span class="live-stat-detail">{{ homepage_stats.counts.sermons }} video/sermon</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="live-stat-pill">
+                                        <span class="live-stat-value">{{ homepage_stats.stat_audio }}</span>
+                                        <span class="live-stat-label">Audio</span>
+                                        <span class="live-stat-detail">{{ homepage_stats.counts.audio }} published</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="live-stat-pill">
+                                        <span class="live-stat-value">{{ homepage_stats.stat_pdfs }}</span>
+                                        <span class="live-stat-label">PDFs</span>
+                                        <span class="live-stat-detail">{{ homepage_stats.counts.pdfs }} PDF/slides</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="small text-secondary mb-0 mt-3">
+                                Add or publish resources under <strong>Resources</strong> in the dashboard to update these numbers.
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if section.extra == 'home_youtube_thumbnail' %}
+                    <div class="col-12">
+                        <hr class="my-2">
+                        {% if home_preview.thumbnail_url %}
+                        <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                            <img src="{{ home_preview.thumbnail_url }}" alt="Preview" class="rounded-3 shadow-sm"
+                                 style="max-height:100px;object-fit:cover;"
+                                 {% if home_preview.thumbnail_fallback_url and home_preview.uses_youtube_cdn %}onerror="this.onerror=null;this.src='{{ home_preview.thumbnail_fallback_url }}';"{% endif %}>
+                            <span class="small text-secondary">Current homepage video thumbnail</span>
+                        </div>
+                        {% endif %}
+                        <label class="form-label fw-semibold" for="{{ form.home_youtube_thumbnail.id_for_label }}">{{ form.home_youtube_thumbnail.label }}</label>
+                        {{ form.home_youtube_thumbnail }}
+                        {% if form.home_youtube_thumbnail.help_text %}<div class="form-text">{{ form.home_youtube_thumbnail.help_text }}</div>{% endif %}
+                        {% for e in form.home_youtube_thumbnail.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+                        {% if home_preview.thumbnail_is_custom %}
+                        <div class="form-check mt-2">
+                            {{ form.remove_home_thumbnail }}
+                            <label class="form-check-label" for="{{ form.remove_home_thumbnail.id_for_label }}">{{ form.remove_home_thumbnail.label }}</label>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+            {% endfor %}
+
+            <div class="dash-panel d-flex flex-wrap gap-2 align-items-center justify-content-between sticky-bottom-bar">
+                <p class="small text-secondary mb-0"><i class="bi bi-info-circle"></i> Changes apply immediately on the public site.</p>
+                <button type="submit" class="btn btn-dash-primary btn-lg px-4">
+                    <i class="bi bi-check-lg"></i> Save all settings
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .site-settings-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #0A2F1F;
+        font-weight: 500;
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+    }
+    .site-settings-nav-link:hover,
+    .site-settings-nav-link.active {
+        background: rgba(212, 175, 55, 0.2);
+        color: #0A2F1F;
+    }
+    .site-settings-section-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: rgba(10, 47, 31, 0.08);
+        color: #0A2F1F;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+    }
+    .scroll-mt { scroll-margin-top: 5rem; }
+    .sticky-bottom-bar {
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
+        border: 2px solid rgba(212, 175, 55, 0.35);
+    }
+    @media (max-width: 991.98px) {
+        .site-settings-nav { position: static !important; }
+    }
+    .site-settings-live-stats {
+        background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(10,47,31,0.04));
+        border: 1px solid rgba(212, 175, 55, 0.35);
+        border-radius: 1rem;
+        padding: 1.15rem 1.25rem;
+    }
+    .live-stat-pill {
+        background: #fff;
+        border-radius: 0.75rem;
+        padding: 0.85rem 0.5rem;
+        border: 1px solid rgba(10,47,31,0.08);
+    }
+    .live-stat-value {
+        display: block;
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #0A2F1F;
+    }
+    .live-stat-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    .live-stat-detail {
+        display: block;
+        font-size: 0.65rem;
+        color: #9ca3af;
+        margin-top: 0.2rem;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const links = document.querySelectorAll('.site-settings-nav-link');
+    const sections = document.querySelectorAll('.site-settings-section');
+    function setActive() {
+        let current = '';
+        sections.forEach(function (sec) {
+            if (window.scrollY >= sec.offsetTop - 120) current = sec.id;
+        });
+        links.forEach(function (link) {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        });
+    }
+    window.addEventListener('scroll', setActive);
+    setActive();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load i18n %}
+{% if active_category and related_qa %}
+<section class="qa-related-section mt-5 pt-4 border-top">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <h2 class="h5 fw-bold mb-0" style="color:var(--qa-dark);">
+            <i class="bi {{ active_category.icon }}"></i>
+            {% blocktrans with name=active_category.name %}Related Q&A: {{ name }}{% endblocktrans %}
+        </h2>
+        <a href="{% url 'topic_hub' active_category.slug %}" class="small fw-semibold">{% trans "All content on this topic" %} →</a>
+    </div>
+    <ul class="qa-related-list">
+        {% for q in related_qa %}
+        <li><a href="{% url 'qa_detail' q.pk %}">{{ q.display_title }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'qa' %}?category={{ active_category.slug }}" class="small fw-semibold">{% trans "Browse Q&A in this topic" %} →</a>
+</section>
+{% endif %}

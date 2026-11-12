@@ -1,0 +1,75 @@
+{% load i18n %}
+<aside class="qa-sidebar" aria-label="{% trans 'Topics and navigation' %}">
+    <div class="qa-aside-stack">
+        <div class="qa-aside-card">
+            <h2 class="qa-aside-title"><i class="bi bi-tags-fill"></i> {% trans "Topics" %}</h2>
+            <p class="small text-secondary mb-2">{% trans "Q&A, videos, and audio grouped together." %}</p>
+            <ul class="qa-topic-list">
+                {% if unified_topics %}
+                {% for item in unified_topics %}
+                <li>
+                    <a href="{% url 'topic_hub' item.category.slug %}"
+                       class="qa-topic-link{% if active_category and active_category.slug == item.category.slug %} is-active{% endif %}">
+                        <i class="bi {{ item.category.icon }}"></i>
+                        <span>{{ item.category.name }}</span>
+                        <span class="qa-topic-count" title="{% trans 'Q&A' %}: {{ item.qa_count }} · {% trans 'Video' %}: {{ item.video_count }} · {% trans 'Audio' %}: {{ item.audio_count }}">{{ item.total_count }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+                {% elif categories_with_counts %}
+                {% for item in categories_with_counts %}
+                <li>
+                    <a href="{% url 'topic_hub' item.category.slug %}"
+                       class="qa-topic-link{% if active_category and active_category.slug == item.category.slug %} is-active{% endif %}">
+                        <i class="bi {{ item.category.icon }}"></i>
+                        <span>{{ item.category.name }}</span>
+                        <span class="qa-topic-count">{{ item.count }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+
+        {% if sidebar_questions %}
+        <div class="qa-aside-card">
+            <h2 class="qa-aside-title"><i class="bi bi-lightning-fill"></i> {% trans "Quick jump" %}</h2>
+            <ol class="qa-sidebar-list mb-2">
+                {% for item in sidebar_questions|slice:":8" %}
+                <li>
+                    <a href="{% url 'qa_detail' item.pk %}" class="qa-sidebar-link">
+                        <span class="qa-sidebar-num">{{ forloop.counter }}</span>
+                        <span class="qa-sidebar-text">{{ item.display_title }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ol>
+            <a href="{% url 'qa' %}" class="qa-sidebar-all small fw-semibold">{% trans "All Q&A" %} →</a>
+        </div>
+        {% endif %}
+
+        {% if qa_verse_text %}
+        <div class="qa-verse-card">
+            <p class="qa-verse-text mb-2">“{{ qa_verse_text }}”</p>
+            <p class="qa-verse-ref mb-0">— {{ qa_verse_reference }}</p>
+        </div>
+        {% endif %}
+
+        <div class="qa-aside-card qa-aside-cta">
+            <h2 class="qa-aside-title"><i class="bi bi-envelope-heart"></i> {% trans "Still need help?" %}</h2>
+            <p class="small mb-3 opacity-90">{% trans "Ask privately — our pastor answers with Scripture and teaching." %}</p>
+            {% if question %}
+            <a href="{% url 'qa' %}?ask=1" class="btn btn-ask-toggle btn-sm w-100 mb-2">
+                <i class="bi bi-plus-circle"></i> {% trans "Ask a question" %}
+            </a>
+            {% else %}
+            <button type="button" class="btn btn-ask-toggle btn-sm w-100 mb-2" data-open-ask>
+                <i class="bi bi-plus-circle"></i> {% trans "Ask a question" %}
+            </button>
+            {% endif %}
+            <a href="{% url 'get_in_touch' %}" class="btn btn-sm btn-outline-light w-100 rounded-pill">
+                <i class="bi bi-chat-dots"></i> {% trans "Contact the pastor" %}
+            </a>
+        </div>
+    </div>
+</aside>
